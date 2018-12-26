@@ -12,11 +12,35 @@ import { MatButtonModule, MatCheckboxModule, MatMenuModule, MatToolbarModule, Ma
   MatProgressBarModule } from '@angular/material';
 import { HttpModule } from '@angular/http';
 import { ToastrModule } from 'ngx-toastr';
+import { SubopcionService } from './servicios/subopcion.service';
+import { ModuloService } from './servicios/modulo.service';
+import { ModuloComponent } from './componentes/modulo/modulo.component';
+import { SubopcionComponent } from './componentes/subopcion/subopcion.component';
+import { PestaniaComponent } from './componentes/pestania/pestania.component';
+import { RolComponent } from './componentes/rol/rol.component';
+import { UsuarioComponent } from './componentes/usuario/usuario.component';
+import { Usuario } from './modelos/usuario';
+import { Modulo } from './modelos/modulo';
+import { Subopcion } from './modelos/subopcion';
+import { Pestania } from './modelos/pestania';
+import { Rol } from './modelos/rol';
+
+//COMPONENTES
+
+//SERVICIOS
+
+//MODELOS
+
+
 
 @NgModule({
   declarations: [
-    AppComponent
-
+    AppComponent,
+    ModuloComponent,
+    SubopcionComponent,
+    PestaniaComponent,
+    RolComponent,
+    UsuarioComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +71,17 @@ import { ToastrModule } from 'ngx-toastr';
       preventDuplicates: true,
     })
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    ModuloService,
+    SubopcionService,
+    Usuario,
+    Modulo,
+    Subopcion,
+    Pestania,
+    Rol
+
+  ],
+  bootstrap: [AppComponent],
+  entryComponents: []
 })
 export class AppModule { }
