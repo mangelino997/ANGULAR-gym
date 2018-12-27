@@ -14,8 +14,6 @@ import { HttpModule } from '@angular/http';
 import { ToastrModule } from 'ngx-toastr';
 
 
-
-
 //COMPONENTES
 import { ModuloComponent } from './componentes/modulo/modulo.component';
 import { SubopcionComponent } from './componentes/subopcion/subopcion.component';
@@ -24,6 +22,9 @@ import { RolComponent } from './componentes/rol/rol.component';
 import { UsuarioComponent } from './componentes/usuario/usuario.component';
 import { ActividadComponent } from './componentes/actividad/actividad.component';
 import { ActividadExtraComponent } from './componentes/actividad-extra/actividad-extra.component';
+import { ConceptoComponent } from './componentes/concepto/concepto.component';
+import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component';
+
 //SERVICIOS
 import { SubopcionService } from './servicios/subopcion.service';
 import { ModuloService } from './servicios/modulo.service';
@@ -33,6 +34,9 @@ import { UsuarioService } from './servicios/usuario.service';
 import { SubopcionPestaniaService } from './servicios/subopcion-pestania.service';
 import { ActividadService } from './servicios/actividad.service';
 import { ActividadExtraService } from './servicios/actividad-extra.service';
+import { ConceptoService } from './servicios/concepto.service';
+import { EjercicioService } from './servicios/ejercicio.service';
+
 //MODELOS
 import { Usuario } from './modelos/usuario';
 import { Modulo } from './modelos/modulo';
@@ -41,7 +45,8 @@ import { Pestania } from './modelos/pestania';
 import { Rol } from './modelos/rol';
 import { Actividad } from './modelos/actividad';
 import { ActividadExtra } from './modelos/actividadExtra';
-
+import { Concepto } from './modelos/concepto';
+import { Ejercicio } from './modelos/ejercicio';
 
 
 
@@ -54,7 +59,9 @@ import { ActividadExtra } from './modelos/actividadExtra';
     RolComponent,
     UsuarioComponent,
     ActividadComponent,
-    ActividadExtraComponent
+    ActividadExtraComponent,
+    ConceptoComponent,
+    EjercicioComponent
   ],
   imports: [
     BrowserModule,
@@ -95,13 +102,17 @@ import { ActividadExtra } from './modelos/actividadExtra';
     UsuarioService,
     ModuloService,
     ActividadExtraService,
+    ConceptoService,
+    EjercicioService,
     Usuario,
     Modulo,
     Subopcion,
     Pestania,
     Rol,
     Actividad,
-    ActividadExtra
+    ActividadExtra,
+    Concepto,
+    Ejercicio
 
   ],
   bootstrap: [AppComponent],

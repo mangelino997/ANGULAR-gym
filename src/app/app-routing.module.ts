@@ -6,9 +6,10 @@ import { PestaniaComponent } from './componentes/pestania/pestania.component';
 import { SubopcionComponent } from './componentes/subopcion/subopcion.component';
 import { ActividadComponent } from './componentes/actividad/actividad.component';
 import { ActividadExtraComponent } from './componentes/actividad-extra/actividad-extra.component';
+import { ConceptoComponent } from './componentes/concepto/concepto.component';
 
 const routes: Routes = [
-  {path: '', component: ActividadExtraComponent}
+  {path: '', component: ConceptoComponent}
 ];
 
 @NgModule({
