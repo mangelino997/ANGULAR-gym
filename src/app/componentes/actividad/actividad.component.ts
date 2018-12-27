@@ -1,32 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { Modulo } from 'src/app/modelos/modulo';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SubopcionPestaniaService } from 'src/app/servicios/subopcion-pestania.service';
 import { ToastrService } from 'ngx-toastr';
-import { SubopcionService } from 'src/app/servicios/subopcion.service';
-import { ModuloService } from 'src/app/servicios/modulo.service';
-import { Subopcion } from 'src/app/modelos/subopcion';
+import { ActividadService } from '../../servicios/actividad.service';
+import { Actividad } from 'src/app/modelos/actividad';
 
 @Component({
-  selector: 'app-subopcion',
-  templateUrl: './subopcion.component.html',
-  styleUrls: ['./subopcion.component.scss']
+  selector: 'app-actividad',
+  templateUrl: './actividad.component.html',
+  styleUrls: ['./actividad.component.scss']
 })
-export class SubopcionComponent implements OnInit {
+export class ActividadComponent implements OnInit {
+
   // define el formulario
   public formulario: FormGroup;
-  //Define la lista completa de las suopciones
+  //Define la lista completa de registros
   public listaCompleta:Array<any> = [];
-  //Define la lista completa de modulos
-  public listaModulos:Array<any> = [];
   // define la lista de pestañas 
   public pestanias: Array<any>;
   // define el link que sera activado
   public activeLink: any;
-  // define el autocompletado de Buscar por Nombre como un formControl 
+  // define el autocompletado como un formControl
   public autocompletado: FormControl=new FormControl();
-  // define el autocompletado de Modulos como un formControl
-  public moduloAutocompletado: FormControl=new FormControl();
   //Define la pestania actual seleccionada
   public pestaniaActual:string = null;
   //Define si mostrar el autocompletado
@@ -39,31 +34,21 @@ export class SubopcionComponent implements OnInit {
   public indiceSeleccionado:number = null;
   //Define la lista de resultados de busqueda
   public resultados:Array<any> = [];
-  //Define la lista de resultados de busqueda
-  public modulosResultados:Array<any> = [];
-
-  constructor(private moduloServicio: ModuloService,private subopcionServicio: SubopcionService, private subopcion: Subopcion, private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
+  
+  //declaramos en el constructor las clases de las cuales usaremos sus servicios/metodos
+  constructor(private actividad: Actividad ,private actividadService: ActividadService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
-        this.subopcionServicio.listarPorNombre(data).subscribe(res => {
+        this.actividadService.listarPorNombre(data).subscribe(res => {
           this.resultados = res.json();
         })
       }
-    });
-    this.moduloAutocompletado.valueChanges.subscribe(data => {
-      if(typeof data == 'string') {
-        this.moduloServicio.listarPorNombre(data).subscribe(res => {
-          this.modulosResultados = res.json();
-          console.log(res.json());
-        })
-      }
-    });
+    })
    }
 
   ngOnInit() {
-    //inicializa el formulario y sus campos desde la clase Modulo.
-    this.formulario= this.subopcion.formulario;
-    
+    //inicializa el formulario y sus elementos
+    this.formulario= this.actividad.formulario;
     //Carga desde un principio las pestañas "Agregar, Consultar, Actualizar y listar"
     this.subopcionPestaniaServicio.listarPestaniasPorSubopcion(1).subscribe(
       res => {
@@ -73,11 +58,8 @@ export class SubopcionComponent implements OnInit {
     );
     //Establece los valores, activando la primera pestania 
     this.seleccionarPestania(1, 'Agregar', 0);
-    // listar los modulos en el campo de tipo select
-    this.listarModulos();
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
-    
   }
 
   //Establece el formulario al seleccionar elemento del autocompletado
@@ -102,11 +84,6 @@ export class SubopcionComponent implements OnInit {
       document.getElementById(componente).focus();
     }, 20);
   };
-
-  public mostrar(){
-    console.log(this.formulario.value);
-  }
-
   //Establece valores al seleccionar una pestania
   public seleccionarPestania(id, nombre, opcion) {
     this.formulario.reset();
@@ -123,15 +100,12 @@ export class SubopcionComponent implements OnInit {
   switch (id) {
     case 1:
       this.obtenerSiguienteId();
-      // this.establecerEstadoCampos(true);
-      this.establecerValoresPestania(nombre, true, false, true, 'idNombre');
+      this.establecerValoresPestania(nombre, false, false, true, 'idNombre');
       break;
     case 2:
-      this.establecerEstadoCampos(false);
       this.establecerValoresPestania(nombre, true, true, false, 'idAutocompletado');
       break;
     case 3:
-      this.establecerEstadoCampos(true);
       this.establecerValoresPestania(nombre, true, false, true, 'idAutocompletado');
       break;
     case 4:
@@ -159,9 +133,9 @@ public accion(indice) {
 }
 //Obtiene el ID del modulo traido desde la base de datos y lo muestra en el campo id del formulario.
   private obtenerSiguienteId(){
-    this.subopcionServicio.obtenerSiguienteId().subscribe(
+    this.actividadService.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res.json());
+        console.log(res);
         this.formulario.get('id').setValue(res.json());
       },
       err => {
@@ -171,22 +145,9 @@ public accion(indice) {
   }
   // Carga en listaCompleta todos los registros de la DB
   private listar(){
-    this.subopcionServicio.listar().subscribe(
+    this.actividadService.listar().subscribe(
       res => {
         this.listaCompleta=res.json();
-        console.log(this.listaCompleta);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-  // Carga en el select Modulos, todos los registros
-  private listarModulos(){
-    this.moduloServicio.listar().subscribe(
-      res => {
-        this.listaModulos=res.json();
-        console.log(this.listaModulos);
       },
       err => {
         console.log(err);
@@ -195,7 +156,7 @@ public accion(indice) {
   }
   //Agrega un registro 
   private agregar(){
-    this.subopcionServicio.agregar(this.formulario.value).subscribe(
+    this.actividadService.agregar(this.formulario.value).subscribe(
       res => {
         var respuesta = res.json();
         if(respuesta.codigo == 201) {
@@ -219,7 +180,7 @@ public accion(indice) {
   }
   //Actualiza un registro
   private actualizar(){
-    this.subopcionServicio.actualizar(this.formulario.value).subscribe(
+    this.actividadService.actualizar(this.formulario.value).subscribe(
       res => {
         var respuesta = res.json();
         if(respuesta.codigo == 200) {
@@ -243,7 +204,7 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.subopcionServicio.agregar(this.formulario.get('id').value).subscribe(
+    this.actividadService.agregar(this.formulario.get('id').value).subscribe(
       res => {
         console.log(res);
       },
@@ -287,21 +248,6 @@ public accion(indice) {
       }
     }
   }
-   //Define el mostrado de datos y comparacion en campo select
-  public compareFn = this.compararFn.bind(this);
-  private compararFn(a, b) {
-    if(a != null && b != null) {
-      return a.id === b.id;
-    }
-  }
-  //Habilita o deshabilita los campos select dependiendo de la pestania actual
-  private establecerEstadoCampos(estado) {
-    if(estado) {
-      this.formulario.get('esABM').enable();
-      this.formulario.get('modulo').enable();
-    } else {
-      this.formulario.get('esABM').disable();
-      this.formulario.get('modulo').disable();
-    }
-  }
+
+
 }

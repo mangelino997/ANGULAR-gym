@@ -1,0 +1,21 @@
+<div id="area" class="container-fluid">
+  <div class="row">
+    <div class="container text-center">
+      <nav mat-tab-nav-bar>
+          <a mat-tab-link disabled>Actividad Extra</a>
+          <a mat-tab-link>Actualizar</a>
+        </nav>
+  </div>
+  </div>
+  <div class="row justify-content-center contenedor" >
+    <div class="col-md-4 text-center">
+      <form [formGroup]="formulario" class="contenedor">
+        <div class="form-group has-float-label">
+          <label for="idImporte" class="tamanio-label">Importe</label>
+          <input id="idImporte" type="number" class="form-control form-control-sm" formControlName="monto"  >
+        </div>
+        <button id="idBoton" class="btn btn-primary" type="button" (click)="actualizar()">Actualizar</button>
+      </form>
+    </div>
+  </div>
+</div>

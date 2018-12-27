@@ -2,11 +2,11 @@
   <div class="row">
     <div class="container text-center">
       <nav mat-tab-nav-bar>
-          <a mat-tab-link disabled>Subopción</a>
+          <a mat-tab-link disabled>Actividad</a>
           <a mat-tab-link
              *ngFor="let pestania of pestanias"
              [active]="activeLink== pestania.pestania.nombre"
-             (click)="seleccionarPestania(pestania.pestania.id, pestania.pestania.nombre, 0)">
+             (click)="seleccionarPestania(pestania.pestania.id, pestania.pestania.nombre)">
             {{pestania.pestania.nombre}}
           </a>
         </nav>
@@ -14,10 +14,10 @@
   </div>
   <div class="row justify-content-center contenedor" *ngIf="indiceSeleccionado < 5">
     <div class="col-md-4 text-center">
-      <h5>{{pestaniaActual}} Subopción</h5>
+      <h5>{{pestaniaActual}} Actividad</h5>
       <form [formGroup]="formulario" class="contenedor">
         <div class="form-group has-float-label" *ngIf="mostrarAutocompletado">
-          <label for="idAutocompletado" class="tamanio-label">Buscar por Nombre</label>
+          <label for="idAutocompletado" class="tamanio-label">Buscar</label>
           <input id="idAutocompletado" class="form-control form-control-sm color-busqueda"
             type="text" matInput [formControl]="autocompletado" [matAutocomplete]="auto" autocomplete="off">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
@@ -29,35 +29,15 @@
         </div>
         <div class="form-group has-float-label">
           <label for="idCodigo" class="tamanio-label">Código</label>
-          <input id="idCodigo" type="text" formControlName="id" class="form-control form-control-sm" readonly>
+          <input id="idCodigo" type="number" formControlName="id" class="form-control form-control-sm" readonly>
         </div>
         <div class="form-group has-float-label">
           <label id="labelNombre" for="idNombre" class="tamanio-label">Nombre *</label>
-          <input id="idNombre" type="text" formControlName="nombre" autocomplete="off"
-            class="form-control form-control-sm" [readonly]="soloLectura"
-            (ngModelChange)="cambioCampo('idNombre', 'labelNombre')">
+          <input id="idNombre" type="text" class="form-control form-control-sm" formControlName="nombre" >
         </div>
-        <div class="form-group ">
-            <div class="form-group has-float-label" >
-                <label id="labelABM" for="idAbm" class="tamanio-label">Es ABM?</label>
-                <mat-select class="form-control form-control-sm" placeholder="---" formControlName="esABM" >
-                    <mat-option [value]="true"> Sí</mat-option>
-                    <mat-option [value]="false"> No</mat-option>
-                  </mat-select>
-              </div>
-        </div>
-        <div class="form-group ">
-            <div class="form-group has-float-label">
-                <label for="idRol" class="tamanio-label">Modulo *</label>
-                <input id="idAutocompletado" class="form-control form-control-sm color-busqueda"
-                  type="text" matInput [formControl]="moduloAutocompletado" [matAutocomplete]="auto" autocomplete="off">
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                  <mat-option *ngFor="let item of modulosResultados" [value]="item"
-                    (onSelectionChange)="cambioAutocompletado(item)">
-                    {{item.nombre}}
-                  </mat-option>
-                </mat-autocomplete>
-              </div>
+        <div class="form-group has-float-label">
+          <label for="idImporte" class="tamanio-label">Importe</label>
+          <input id="idImporte" type="number" class="form-control form-control-sm" formControlName="precio"  >
         </div>
         <button id="idBoton" *ngIf="mostrarBoton" class="btn btn-primary" type="button"
           formnovalidate (click)="accion(indiceSeleccionado)" >
@@ -72,9 +52,8 @@
         <thead>
           <tr>
             <th class="text-center" style="width:20%" scope="col">#</th>
-            <th class="text-center" style="width:40%" scope="col">Nombre</th>
-            <th class="text-center" style="width:20%" scope="col">Es ABM</th>
-            <th class="text-center" style="width:20%" scope="col">Módulo</th>
+            <th class="text-center" style="width:80%" scope="col">Nombre</th>
+            <th class="text-center" style="width:80%" scope="col">Importe ($)</th>
             <th class="text-center" style="width:10%" scope="col">-</th>
             <th class="text-center" style="width:10%" scope="col">-</th>
           </tr>
@@ -88,10 +67,7 @@
               <span>{{l.nombre}}</span>
             </td>
             <td >
-              <span>{{l.esABM}}</span>
-            </td>
-            <td >
-              <span>{{l.modulo.nombre}}</span>
+              <span>{{l.precio}}</span>
             </td>
             <td >
               <span class="cursor-color" (click)="activarConsultar(l)">Ver</span>

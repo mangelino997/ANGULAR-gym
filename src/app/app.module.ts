@@ -12,24 +12,36 @@ import { MatButtonModule, MatCheckboxModule, MatMenuModule, MatToolbarModule, Ma
   MatProgressBarModule } from '@angular/material';
 import { HttpModule } from '@angular/http';
 import { ToastrModule } from 'ngx-toastr';
-import { SubopcionService } from './servicios/subopcion.service';
-import { ModuloService } from './servicios/modulo.service';
+
+
+
+
+//COMPONENTES
 import { ModuloComponent } from './componentes/modulo/modulo.component';
 import { SubopcionComponent } from './componentes/subopcion/subopcion.component';
 import { PestaniaComponent } from './componentes/pestania/pestania.component';
 import { RolComponent } from './componentes/rol/rol.component';
 import { UsuarioComponent } from './componentes/usuario/usuario.component';
+import { ActividadComponent } from './componentes/actividad/actividad.component';
+import { ActividadExtraComponent } from './componentes/actividad-extra/actividad-extra.component';
+//SERVICIOS
+import { SubopcionService } from './servicios/subopcion.service';
+import { ModuloService } from './servicios/modulo.service';
+import { RolService } from './servicios/rol.service';
+import { PestaniaService } from './servicios/pestania.service';
+import { UsuarioService } from './servicios/usuario.service';
+import { SubopcionPestaniaService } from './servicios/subopcion-pestania.service';
+import { ActividadService } from './servicios/actividad.service';
+import { ActividadExtraService } from './servicios/actividad-extra.service';
+//MODELOS
 import { Usuario } from './modelos/usuario';
 import { Modulo } from './modelos/modulo';
 import { Subopcion } from './modelos/subopcion';
 import { Pestania } from './modelos/pestania';
 import { Rol } from './modelos/rol';
+import { Actividad } from './modelos/actividad';
+import { ActividadExtra } from './modelos/actividadExtra';
 
-//COMPONENTES
-
-//SERVICIOS
-
-//MODELOS
 
 
 
@@ -40,7 +52,9 @@ import { Rol } from './modelos/rol';
     SubopcionComponent,
     PestaniaComponent,
     RolComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    ActividadComponent,
+    ActividadExtraComponent
   ],
   imports: [
     BrowserModule,
@@ -74,11 +88,20 @@ import { Rol } from './modelos/rol';
   providers: [
     ModuloService,
     SubopcionService,
+    SubopcionPestaniaService,
+    ActividadService,
+    RolService,
+    PestaniaService,
+    UsuarioService,
+    ModuloService,
+    ActividadExtraService,
     Usuario,
     Modulo,
     Subopcion,
     Pestania,
-    Rol
+    Rol,
+    Actividad,
+    ActividadExtra
 
   ],
   bootstrap: [AppComponent],
