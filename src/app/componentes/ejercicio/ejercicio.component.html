@@ -87,7 +87,7 @@
           <div class="col-md-8">
               <div class="form-group has-float-label">
                   <label for="idLesiones" class="tamanio-label">Lesiones</label>
-                  <input id="idLesiones" class="form-control form-control-sm color-busqueda"  #inputLesiones
+                  <input id="idLesiones" class="form-control form-control-sm color-busqueda"  #inputLesiones id="inputLesiones"
                     type="text" matInput [formControl]="lesiones" [matAutocomplete]="mat" autocomplete="off" [readonly]="soloLectura">
                   <mat-autocomplete #mat="matAutocomplete" [displayWith]="displayFn.bind(this)" >
                     <mat-option *ngFor="let lesion of listaLesiones" [value]="lesion" (click)="addLesiones(lesion)">

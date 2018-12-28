@@ -11,7 +11,8 @@ export class Foto {
             id: new FormControl(),
             version: new FormControl(),
             nombre: new FormControl('', [Validators.required, Validators.maxLength(20)]),
-            extension: new FormControl('', [Validators.required, Validators.maxLength(5)]),
+            tipo: new FormControl('', [Validators.required, Validators.maxLength(10)]),
+            tamanio: new FormControl('', Validators.required),
             datos: new FormControl('', Validators.required)
             
         })

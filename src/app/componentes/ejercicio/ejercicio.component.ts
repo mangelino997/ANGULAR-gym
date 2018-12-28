@@ -7,6 +7,7 @@ import { EjercicioService } from 'src/app/servicios/ejercicio.service';
 import { FotoService } from 'src/app/servicios/foto.service';
 import { Foto } from 'src/app/modelos/foto';
 import * as $ from 'jquery';
+import { LesionService } from 'src/app/servicios/lesion.service';
 @Component({
   selector: 'app-ejercicio',
   templateUrl: './ejercicio.component.html',
@@ -33,6 +34,9 @@ export class EjercicioComponent implements OnInit {
   public lesiones: FormControl=new FormControl();
   //Define la pestania actual seleccionada
   public pestaniaActual:string = null;
+  //Define la pestania actual seleccionada
+  public lesionElegida:Array<any> = [];
+  
   //Define si mostrar el autocompletado
   public mostrarAutocompletado:boolean = null;
   //Define si el campo es de solo lectura
@@ -49,6 +53,9 @@ export class EjercicioComponent implements OnInit {
   public listaLesiones:Array<any> = [];
   //Define la lista para las Lesiones seleccionadas 
   public listaLesionesAgregadas:Array<any> = [];
+  //Define la lista para las Lesiones seleccionadas por su id
+  public listaLesionesAgregadasId:Array<any> = [];
+  
   //Define la lista para Grupos Generales
   public listaGrupoGenerales:Array<any> = [];
   //Define la lista para Grupos Musculares
@@ -66,7 +73,7 @@ export class EjercicioComponent implements OnInit {
   @ViewChild('inputAutorizado') inputLesiones: ElementRef;
   
   //declaramos en el constructor las clases de las cuales usaremos sus servicios/metodos
-  constructor(private foto:Foto, private fotoService: FotoService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
+  constructor(private lesionService: LesionService,private foto:Foto, private fotoService: FotoService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.ejercicioService.listarPorNombre(data).subscribe(res => {
@@ -75,14 +82,22 @@ export class EjercicioComponent implements OnInit {
       }
     });
     //agregar el metodo de buscar por lesion
-    //this.lesiones.valueChanges.subscribe(data => {
-      //if(typeof data == 'string') {
-        //this.lesionesService.listarPorNombre(data).subscribe(res => {
-          //this.listaLesiones = res.json();
-          //console.log(this.listaLesiones);
-        //})
-      //}
-    //});
+    this.lesiones.valueChanges.subscribe(data => {
+      if(typeof data == 'string') {
+        this.lesionService.listarPorNombre(data).subscribe(res => {
+          this.listaLesiones = res.json();
+          for(let i=0; i<this.listaLesiones.length; i++){
+            for(let j=0; j<this.lesionElegida.length; j++){
+              if(this.listaLesiones[i].id==this.lesionElegida[j]){ //si el id=1 significa que es Cuenta Corriente, lo escondo
+              
+                console.log(this.listaLesiones.splice(i,1));
+              }
+            }
+            
+          }
+        })
+      }
+    });
    }
 
   ngOnInit() {
@@ -214,18 +229,27 @@ public accion(indice) {
   }
   //Agrega un registro 
   private agregar(){
-    console.log(this.archivo);
+    console.log(this.listaLesionesAgregadas);
+    
     this.fotoService.postFileImagen(this.archivo).subscribe(res=>{
       var respuesta = res.json();
+      var id= respuesta.id-1; //al id devuelto en la respuesta se le debe restar 1 para obtener el correcto id de la imagen
       let foto = { 
-        id: respuesta.id
+        id: id
       }
-      console.log(foto); //imprime el id de la foto que se va a cargar
-      console.log(this.listaLesionesAgregadas.values);
-      this.formulario.get('idImagen').setValue(foto);
+      console.log(respuesta);
+      this.formulario.get('idImagen').setValue(foto.id);
+      console.log(this.formulario.value);
+      console.log(this.listaLesionesAgregadas);
       //obtiene el array de autorizados agregados y los guarda en el campo 'autorizados' del formulario
-      this.formulario.get('lesiones').setValue(this.listaLesionesAgregadas);
+      this.formulario.get('lesiones').setValue(this.listaLesionesAgregadasId);
+      console.log(this.formulario.value);
+      this.formulario.get('idGrupoGeneral').setValue(1);
+      console.log(this.formulario.value);
+      this.formulario.get('idGrupoMuscular').setValue(1);
+      this.formulario.get('idGrupoMaquina').setValue(1);
       console.log( this.formulario.value);
+      
       this.ejercicioService.agregar(this.formulario.value).subscribe(
         res => {
           var respuesta = res.json();
@@ -255,10 +279,11 @@ public accion(indice) {
     if(this.bandera== true){
       this.fotoService.postFileImagen(this.archivo).subscribe(res=>{
         var respuesta = res.json();
+        var id= respuesta.id-1; //al id devuelto en la respuesta se le debe restar 1 para obtener el correcto id de la imagen
         let foto = { 
-          id: respuesta.id
+          id: id
         }
-        this.formulario.get('foto').setValue(foto);
+        this.formulario.get('idImagen').setValue(foto.id);
         this.formulario.get('autorizados').setValue(this.listaLesionesAgregadas);
         this.ejercicioService.actualizar(this.formulario.value).subscribe(
           res => {
@@ -366,9 +391,13 @@ public accion(indice) {
   }
   // añade un autorizado seleccionado a la lista
   public addLesiones(lesion) {
-    this.listaLesionesAgregadas.push(lesion);
-    this.inputLesiones.nativeElement.value="";
-    
+    this.lesionElegida.push(lesion.id);
+    this.listaLesionesAgregadas.push(lesion);// formato para mostrar en tabla las lesiones elegidas
+    var l={
+      idLesion: lesion.id
+    }
+    this.listaLesionesAgregadasId.push(l);// formato que me pide la Api para agregar un ejercicio
+    this.lesiones.setValue(null);//seteo autocompletado a null
   }
   // elimina un autorizado seleccionado de la lista
   public  deleteLesion(lesion) {
@@ -376,6 +405,7 @@ public accion(indice) {
       for(let i=0; i< this.listaLesionesAgregadas.length; i++ ){
           if(lesion==this.listaLesionesAgregadas[i]){
             this.listaLesionesAgregadas.splice(i, 1);
+            this.listaLesionesAgregadasId.splice(i,1);
         }
       
     }
@@ -395,7 +425,6 @@ public accion(indice) {
   }
   private fileOnload(e){
     var result=e.target.result;
-    console.log(result);
     $('#imgSalida').attr("src",result);
     $('#imagen-nombre').empty().append('Foto cargada');
   }

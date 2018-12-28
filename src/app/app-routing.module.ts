@@ -11,7 +11,7 @@ import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component'
 import { LesionComponent } from './componentes/lesion/lesion.component';
 
 const routes: Routes = [
-  {path: '', component: LesionComponent}
+  {path: '', component: EjercicioComponent}
 ];
 
 @NgModule({
