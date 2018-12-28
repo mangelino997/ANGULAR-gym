@@ -7,9 +7,11 @@ import { SubopcionComponent } from './componentes/subopcion/subopcion.component'
 import { ActividadComponent } from './componentes/actividad/actividad.component';
 import { ActividadExtraComponent } from './componentes/actividad-extra/actividad-extra.component';
 import { ConceptoComponent } from './componentes/concepto/concepto.component';
+import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component';
+import { LesionComponent } from './componentes/lesion/lesion.component';
 
 const routes: Routes = [
-  {path: '', component: ConceptoComponent}
+  {path: '', component: LesionComponent}
 ];
 
 @NgModule({

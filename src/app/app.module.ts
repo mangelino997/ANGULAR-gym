@@ -1,9 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatMenuModule, MatToolbarModule, MatDividerModule,
@@ -11,6 +9,7 @@ import { MatButtonModule, MatCheckboxModule, MatMenuModule, MatToolbarModule, Ma
   MatAutocompleteModule, MatInputModule, MatRadioModule, MatTableModule, MatDialogModule,
   MatProgressBarModule } from '@angular/material';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 
 
@@ -36,6 +35,8 @@ import { ActividadService } from './servicios/actividad.service';
 import { ActividadExtraService } from './servicios/actividad-extra.service';
 import { ConceptoService } from './servicios/concepto.service';
 import { EjercicioService } from './servicios/ejercicio.service';
+import { FotoService } from './servicios/foto.service';
+import { LesionService } from './servicios/lesion.service';
 
 //MODELOS
 import { Usuario } from './modelos/usuario';
@@ -47,6 +48,9 @@ import { Actividad } from './modelos/actividad';
 import { ActividadExtra } from './modelos/actividadExtra';
 import { Concepto } from './modelos/concepto';
 import { Ejercicio } from './modelos/ejercicio';
+import { Foto } from './modelos/foto';
+import { Lesion } from './modelos/lesion';
+import { LesionComponent } from './componentes/lesion/lesion.component';
 
 
 
@@ -61,10 +65,12 @@ import { Ejercicio } from './modelos/ejercicio';
     ActividadComponent,
     ActividadExtraComponent,
     ConceptoComponent,
-    EjercicioComponent
+    EjercicioComponent,
+    LesionComponent
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
@@ -104,6 +110,8 @@ import { Ejercicio } from './modelos/ejercicio';
     ActividadExtraService,
     ConceptoService,
     EjercicioService,
+    FotoService,
+    LesionService,
     Usuario,
     Modulo,
     Subopcion,
@@ -112,7 +120,9 @@ import { Ejercicio } from './modelos/ejercicio';
     Actividad,
     ActividadExtra,
     Concepto,
-    Ejercicio
+    Ejercicio,
+    Foto,
+    Lesion
 
   ],
   bootstrap: [AppComponent],

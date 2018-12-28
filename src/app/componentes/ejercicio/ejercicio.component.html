@@ -2,7 +2,7 @@
   <div class="row">
     <div class="container text-center">
       <nav mat-tab-nav-bar>
-          <a mat-tab-link disabled>Cliente Propio</a>
+          <a mat-tab-link disabled>Ejercicio</a>
           <a mat-tab-link
              *ngFor="let pestania of pestanias"
              [active]="activeLink== pestania.pestania.nombre"
@@ -13,7 +13,7 @@
   </div>
   </div>
   <div class="row justify-content-center contenedor">
-    <h5>{{pestaniaActual}} Cliente Propio</h5>
+    <h5>{{pestaniaActual}} Ejercicio</h5>
   </div>
   <!-- <form [formGroup]="formulario" class="contenedor"> -->
   <div class="row justify-content-center contenedor" *ngIf="indiceSeleccionado < 5">
@@ -22,7 +22,7 @@
         <div class="row ">
           <div class="col-md-8">
             <div class="form-group has-float-label " *ngIf="mostrarAutocompletado">
-              <label for="idAutocompletado" class="tamanio-label">Buscar por Alias</label>
+              <label for="idAutocompletado" class="tamanio-label">Buscar</label>
               <input id="idAutocompletado" class="form-control form-control-sm color-busqueda"
                 type="text" matInput [formControl]="autocompletado" [matAutocomplete]="auto" autocomplete="off">
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
@@ -47,129 +47,60 @@
             <div class="form-group has-float-label">
               <label id="labelNombre" for="idNombre" class="tamanio-label">Nombre *</label>
               <input id="idNombre" type="text" formControlName="nombre" autocomplete="off"
-                class="form-control form-control-sm" [readonly]="soloLectura"
-                (ngModelChange)="cambioCampo('idNombre', 'labelNombre')">
-            </div>
-          </div>
-          <div class="col-md-4">
-          <div class="form-group has-float-label">
-              <label id="" for="apellido" class="tamanio-label">Apellido*</label>
-              <input id="apellido" type="text" formControlName="apellido" autocomplete="off"
                 class="form-control form-control-sm" [readonly]="soloLectura">
-          </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group has-float-label">
-                <label id="labelDni" for="idDni" class="tamanio-label">DNI*</label>
-                <input id="idDni" type="number" formControlName="dni" autocomplete="off"
-                  class="form-control form-control-sm" [readonly]="soloLectura">
             </div>
-            </div>
+          </div>
         </div>
         <div class="row ">
           <div class="col-md-4">
-            <div class="form-group has-float-label">
-              <label id="labelCuil" for="idCuil" class="tamanio-label">Cuil*</label>
-              <input id="idCuil" type="text" formControlName="cuil" autocomplete="off"
-              class="form-control form-control-sm" [readonly]="soloLectura" >
-            </div>
-          </div>
-          <div class="col-md-4">
+            <div class="form-group ">
               <div class="form-group has-float-label">
-                <label id="" for="idMatricula" class="tamanio-label">Matrícula</label>
-                <input id="idMatricula" type="text" formControlName="matricula" autocomplete="off"
-                class="form-control form-control-sm" [readonly]="soloLectura">
-              </div>
+                  <label for="idGrupoGeneral" class="tamanio-label">Grupo General</label>
+                  <mat-select class="form-control" id="idGrupoGeneral" placeholder="Grupo General" formControlName="idGrupoGeneral" [compareWith]="compareFn">
+                      <mat-option *ngFor="let grupoGeneral of listaGrupoGenerales" [value]="grupoGeneral"> {{grupoGeneral.nombre }}</mat-option>
+                  </mat-select>
+                </div>
+            </div>
           </div>
           <div class="col-md-4">
+            <div class="form-group ">
               <div class="form-group has-float-label">
-                <label id="" for="idFechaNacimiento" class="tamanio-label">Fecha de Nacimiento*</label>
-                <input id="idFechaNacimiento" type="date" formControlName="fechaNacimiento" autocomplete="off"
-                class="form-control form-control-sm" [readonly]="soloLectura" >
-              </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group has-float-label">
-              <label id="" for="idDireccion" class="tamanio-label">Dirección</label>
-              <input id="idDireccion" type="text" formControlName="direccion" autocomplete="off"
-              class="form-control form-control-sm" [readonly]="soloLectura" >
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group has-float-label">
-              <label id="" for="idDireccionAlt" class="tamanio-label">Dirección Alternativa</label>
-              <input id="idDireccionAlt" type="text" formControlName="direccionAlt" autocomplete="off"
-              class="form-control form-control-sm" [readonly]="soloLectura">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-2">
-            <div class="form-group has-float-label">
-              <label id="" for="idCodigoArea" class="tamanio-label">Código de Area</label>
-              <input id="idCodigoArea" type="text" formControlName="codigoArea" autocomplete="off"
-              class="form-control form-control-sm" [readonly]="soloLectura">
+                  <label for="idGrupoMuscular" class="tamanio-label">Grupo Muscular</label>
+                  <mat-select class="form-control" id="idGrupoMuscular" placeholder="Grupo Muscular" formControlName="idGrupoMuscular" [compareWith]="compareFn">
+                      <mat-option *ngFor="let grupoMuscular of listaGrupoMusculares" [value]="grupoMuscular"> {{grupoMuscular.nombre }}</mat-option>
+                  </mat-select>
+                </div>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group has-float-label">
-              <label id="" for="idTelefono" class="tamanio-label">Teléfono</label>
-              <input id="idtelefono" type="number" formControlName="telefono" autocomplete="off"
-              class="form-control form-control-sm" [readonly]="soloLectura">
+            <div class="form-group ">
+              <div class="form-group has-float-label">
+                  <label for="idGrupoMaquina" class="tamanio-label">Grupo Máquina</label>
+                  <mat-select class="form-control" id="idGrupoMaquina" placeholder="Grupo Máquina" formControlName="idGrupoMaquina" [compareWith]="compareFn">
+                      <mat-option *ngFor="let grupoMaquina of listaGrupoMaquinas" [value]="grupoMaquina"> {{grupoMaquina.nombre }}</mat-option>
+                  </mat-select>
+                </div>
             </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-group has-float-label">
-              <label id="" for="idCodigoAreaAlt" class="tamanio-label">Cód. Area Alternativo</label>
-              <input id="idCodigoAreaAlt" type="text" formControlName="codigoAreaAlt" autocomplete="off"
-              class="form-control form-control-sm" [readonly]="soloLectura">
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group has-float-label">
-              <label id="" for="idTelefonoAlt" class="tamanio-label">Teléfono Alternativo</label>
-              <input id="idtelefonoAlt" type="number" formControlName="telefonoAlt" autocomplete="off"
-              class="form-control form-control-sm" [readonly]="soloLectura">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group has-float-label">
-              <label id="labelCorreo" for="idCorreoElectronico" class="tamanio-label">Correo Electrónico</label>
-              <input id="idCorreoElectronico" type="email" formControlName="correoElectronico" autocomplete="off"
-              class="form-control form-control-sm" [readonly]="soloLectura">
-            </div>
-          </div>
-          <div class="col-md-5">
           </div>
         </div>
         <div class="row">
           <div class="col-md-8">
               <div class="form-group has-float-label">
-                  <label for="idAutocompletadoAut" class="tamanio-label">Buscar autorizado</label>
-                  <input id="idAutocompletadoAut" class="form-control form-control-sm color-busqueda"  #inputAutorizado
-                    type="text" matInput [formControl]="autocompletadoAutorizados" [matAutocomplete]="autoAut" autocomplete="off" [readonly]="soloLectura">
-                  <mat-autocomplete #autoAut="matAutocomplete" [displayWith]="displayFn.bind(this)" >
-                    <mat-option *ngFor="let a of listaAutorizados" [value]="a" (click)="addAutorizados(a)">
-                      {{a.alias}}
+                  <label for="idLesiones" class="tamanio-label">Lesiones</label>
+                  <input id="idLesiones" class="form-control form-control-sm color-busqueda"  #inputLesiones
+                    type="text" matInput [formControl]="lesiones" [matAutocomplete]="mat" autocomplete="off" [readonly]="soloLectura">
+                  <mat-autocomplete #mat="matAutocomplete" [displayWith]="displayFn.bind(this)" >
+                    <mat-option *ngFor="let lesion of listaLesiones" [value]="lesion" (click)="addLesiones(lesion)">
+                      {{lesion.nombre}}
                     </mat-option>
                   </mat-autocomplete>
               </div>
           </div>
-          <div class="col-md-2">
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" (click)="openDialog()" *ngIf="mostrarBoton">
-                  Nuevo Autorizado
-                </button>
-          </div>
         </div>
-        <!--tabla para mostrar los autorizados que selecciono de la lista autocompletado-->
+        <!--tabla para mostrar las lesiones seleccionadas-->
         <div class="row">
             <div class="col-md-8">
-                <table class="table table-bordered table-striped table-sm" #tablaAutorizados >
+                <table class="table table-bordered table-striped table-sm" #tablaLesiones >
                   <thead>
                     <tr>
                       <th class="text-center" style="width:80%" scope="col">Nombre</th>
@@ -177,12 +108,12 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let a of listaAutorizadosAgregados">
+                    <tr *ngFor="let lesion of listaLesionesAgregadas">
                       <td >
-                        <input name="idAutorizados" type="text" class="centrado" value="{{a.nombreCompleto}}" [readonly]="soloLectura" DISABLED>
+                        <input name="idAutorizados" type="text" class="centrado" value="{{lesion.nombre}}" [readonly]="soloLectura" DISABLED>
                       </td>
                       <td *ngIf="!soloLectura">
-                        <input name="accionesAutorizados" type="button" class="centrado" value="X" (click)="deleteAutorizados(a)" >
+                        <input name="accionesAutorizados" type="button" class="centrado" value="X" (click)="deleteLesion(lesion)" >
                       </td>
                     </tr>
                   </tbody>
@@ -199,7 +130,7 @@
     <div class="col-md-3 align-self-end">
       <form [formGroup]="formularioFoto">
         <div class="justify-content-center" style="text-align: center;">
-        <img id="imgSalida" width="50%" height="50%" src="http://192.168.0.99:8081/hibanaws/auth/foto/obtenerPorId/{{idFoto}}" *ngIf="indiceSeleccionado>1 && !muestraImagenPc"/>
+        <img id="imgSalida" width="50%" height="50%" src="http://localhost:8082/hibanaws/auth/foto/obtenerPorId/{{idFoto}}" *ngIf="indiceSeleccionado>1 && !muestraImagenPc"/>
         <img id="imgSalida" width="50%" height="50%" src="assets/User.png" *ngIf="indiceSeleccionado==1 || muestraImagenPc">
         </div>
         <div class="input-group">
@@ -217,8 +148,12 @@
       <table class="table table-bordered table-striped table-sm">
         <thead>
           <tr>
-            <th class="text-center" style="width:20%" scope="col">id</th>
-            <th class="text-center" style="width:80%" scope="col">Nombre</th>
+            <th class="text-center" style="width:20%" scope="col">#</th>
+            <th class="text-center" style="width:20%" scope="col">Nombre</th>
+            <th class="text-center" style="width:20%" scope="col">Grupo General</th>
+            <th class="text-center" style="width:20%" scope="col">Grupo Muscular</th>
+            <th class="text-center" style="width:20%" scope="col">Grupo Máquina</th>
+            <th class="text-center" style="width:20%" scope="col">Lesiones</th>
             <th class="text-center" style="width:10%" scope="col">-</th>
             <th class="text-center" style="width:10%" scope="col">-</th>
           </tr>
@@ -230,6 +165,18 @@
             </td>
             <td >
               <span>{{l.nombre}}</span>
+            </td>
+            <td >
+              <span>{{l.grupoGeneral.nombre}}</span>
+            </td>
+            <td >
+              <span>{{l.grupoMuscular.nombre}}</span>
+            </td>
+            <td >
+              <span>{{l.grupoMaquina.nombre}}</span>
+            </td>
+            <td >
+              <span>{{l.lesiones}}</span>
             </td>
             <td >
               <span class="cursor-color" (click)="activarConsultar(l)">Ver</span>
