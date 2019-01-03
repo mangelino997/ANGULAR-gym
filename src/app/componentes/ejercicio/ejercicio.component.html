@@ -130,8 +130,8 @@
     <div class="col-md-3 align-self-end">
       <form [formGroup]="formularioFoto">
         <div class="justify-content-center" style="text-align: center;">
-        <img id="imgSalida" width="50%" height="50%" src="http://localhost:8082/hibanaws/auth/foto/obtenerPorId/{{idFoto}}" *ngIf="indiceSeleccionado>1 && !muestraImagenPc"/>
-        <img id="imgSalida" width="50%" height="50%" src="assets/User.png" *ngIf="indiceSeleccionado==1 || muestraImagenPc">
+        <img id="imgSalida" width="50%" height="50%" src="http://localhost:8082/hibanaws/auth/foto/obtenerPorId/{{idFoto}}" *ngIf="indiceSeleccionado>0 && !muestraImagenPc"/>
+        <img id="imgSalida" width="50%" height="50%" src="assets/User.png" *ngIf="indiceSeleccionado>0 && muestraImagenPc">
         </div>
         <div class="input-group">
             <div class="custom-file">

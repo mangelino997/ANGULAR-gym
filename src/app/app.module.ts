@@ -51,7 +51,7 @@ import { Ejercicio } from './modelos/ejercicio';
 import { Foto } from './modelos/foto';
 import { Lesion } from './modelos/lesion';
 import { LesionComponent } from './componentes/lesion/lesion.component';
-
+import { Profesor } from './modelos/profesor';
 
 
 @NgModule({
@@ -122,7 +122,8 @@ import { LesionComponent } from './componentes/lesion/lesion.component';
     Concepto,
     Ejercicio,
     Foto,
-    Lesion
+    Lesion,
+    Profesor
 
   ],
   bootstrap: [AppComponent],

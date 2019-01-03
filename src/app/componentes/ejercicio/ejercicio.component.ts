@@ -414,6 +414,8 @@ public accion(indice) {
   public cargandoImagen(files: FileList, e){
     this.archivo=null;
     this.archivo=files[0];
+    this.muestraImagenPc=false;
+
     var reader = new FileReader();
     reader.onload = this.fileOnload;
     reader.readAsDataURL(this.archivo);
@@ -421,7 +423,6 @@ public accion(indice) {
     console.log(e);
     console.log('imagen adjuntada');
     this.bandera=true;
-    this.muestraImagenPc=false;
   }
   private fileOnload(e){
     var result=e.target.result;
