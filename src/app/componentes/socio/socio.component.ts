@@ -1,23 +1,21 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ModuloService } from 'src/app/servicios/modulo.service';
 import { SubopcionPestaniaService } from 'src/app/servicios/subopcion-pestania.service';
 import { ToastrService } from 'ngx-toastr';
-import { Ejercicio } from 'src/app/modelos/ejercicio';
-import { EjercicioService } from 'src/app/servicios/ejercicio.service';
-import { FotoService } from 'src/app/servicios/foto.service';
+import { PestaniaService } from 'src/app/servicios/pestania.service';
+import { Pestania } from 'src/app/modelos/pestania';
+import { Socio } from 'src/app/modelos/socio';
+import { SocioService } from 'src/app/servicios/socio.service';
 import { Foto } from 'src/app/modelos/foto';
-import * as $ from 'jquery';
-import { LesionService } from 'src/app/servicios/lesion.service';
-import { GrupoMuscularService } from 'src/app/servicios/grupo-muscular.service';
-import { GrupoMaquinaService } from 'src/app/servicios/grupo-maquina.service';
-import { GrupoGeneralService } from 'src/app/servicios/grupo-general.service';
+import { FotoService } from 'src/app/servicios/foto.service';
 @Component({
-  selector: 'app-ejercicio',
-  templateUrl: './ejercicio.component.html',
-  styleUrls: ['./ejercicio.component.scss']
+  selector: 'app-socio',
+  templateUrl: './socio.component.html',
+  styleUrls: ['./socio.component.scss']
 })
 
-export class EjercicioComponent implements OnInit {
+export class SocioComponent implements OnInit {
 
   // define el formulario
   public formulario: FormGroup;
@@ -72,32 +70,14 @@ export class EjercicioComponent implements OnInit {
 
   bandera: boolean= false;
 
-  //captura el elemento 'inputAutorizado' del dom (como un document.getElementById)
-  @ViewChild('inputAutorizado') inputLesiones: ElementRef;
+
   
   //declaramos en el constructor las clases de las cuales usaremos sus servicios/metodos
-  constructor(private grupoGeneralService: GrupoGeneralService ,private grupoMaquinaService: GrupoMaquinaService, private grupoMuscularService: GrupoMuscularService, private lesionService: LesionService,private foto:Foto, private fotoService: FotoService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
+  constructor(  private socioService: SocioService, private foto:Foto, private fotoService: FotoService ,private socio: Socio  ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
-        this.ejercicioService.listarPorNombre(data).subscribe(res => {
+        this.socioService.listarPorNombre(data).subscribe(res => {
           this.resultados = res.json();
-        })
-      }
-    });
-    //agregar el metodo de buscar por lesion
-    this.lesiones.valueChanges.subscribe(data => {
-      if(typeof data == 'string') {
-        this.lesionService.listarPorNombre(data).subscribe(res => {
-          this.listaLesiones = res.json();
-          for(let i=0; i<this.listaLesiones.length; i++){
-            for(let j=0; j<this.lesionElegida.length; j++){
-              if(this.listaLesiones[i].id==this.lesionElegida[j]){ //si el id=1 significa que es Cuenta Corriente, lo escondo
-              
-                console.log(this.listaLesiones.splice(i,1));
-              }
-            }
-            
-          }
         })
       }
     });
@@ -105,7 +85,7 @@ export class EjercicioComponent implements OnInit {
 
   ngOnInit() {
     //inicializa el formulario y sus elementos
-    this.formulario= this.ejercicio.formulario;
+    this.formulario= this.socio.formulario;
     //inicializa el formulario y sus elementos
     this.formularioFoto= new FormGroup({foto: new FormControl()});
     //Carga desde un principio las pestañas "Agregar, Consultar, Actualizar y listar"
@@ -117,12 +97,6 @@ export class EjercicioComponent implements OnInit {
     );
     //Establece los valores, activando la primera pestania 
     this.seleccionarPestania(1, 'Agregar', 0);
-    //Cargar el campo select con los Grupos Generales
-    this.listarGruposGenerales();
-    //Cargar el campo select con los Grupos Musculares
-    this.listarGruposMusculares();
-    //Cargar el campo select con los Grupos Maquinas
-    this.listarGruposMaquinas();
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
     // inicializa en false
@@ -132,8 +106,6 @@ export class EjercicioComponent implements OnInit {
   //Establece el formulario al seleccionar elemento del autocompletado
   public cambioAutocompletado(elemento) {
     this.formulario.patchValue(elemento);
-    this.borrarAgregados();
-    this.listarAutorizado(elemento);
     this.mostrarFotoCliente(elemento);
   }
   //Formatea el valor del autocompletado
@@ -159,7 +131,6 @@ export class EjercicioComponent implements OnInit {
     this.formulario.reset();
     this.indiceSeleccionado = id;
     this.activeLink = nombre;
-    this.borrarAgregados();
     /*
     * Se vacia el formulario solo cuando se cambia de pestania, no cuando
     * cuando se hace click en ver o mod de la pestania lista
@@ -209,7 +180,7 @@ public accion(indice) {
 }
 //Obtiene el ID del modulo traido desde la base de datos y lo muestra en el campo id del formulario.
   private obtenerSiguienteId(){
-    this.ejercicioService.obtenerSiguienteId().subscribe(
+    this.socioService.obtenerSiguienteId().subscribe(
       res => {
         console.log(res);
         this.formulario.get('id').setValue(res.json());
@@ -221,7 +192,7 @@ public accion(indice) {
   }
   // Carga en listaCompleta todos los registros de la DB
   private listar(){
-    this.ejercicioService.listar().subscribe(
+    this.socioService.listar().subscribe(
       res => {
         this.listaCompleta=res.json();
       },
@@ -253,7 +224,7 @@ public accion(indice) {
       this.formulario.get('idGrupoMaquina').setValue(1);
       console.log( this.formulario.value);
       
-      this.ejercicioService.agregar(this.formulario.value).subscribe(
+      this.socioService.agregar(this.formulario.value).subscribe(
         res => {
           var respuesta = res.json();
           if(respuesta.codigo == 201) {
@@ -288,7 +259,7 @@ public accion(indice) {
         }
         this.formulario.get('idImagen').setValue(foto.id);
         this.formulario.get('autorizados').setValue(this.listaLesionesAgregadas);
-        this.ejercicioService.actualizar(this.formulario.value).subscribe(
+        this.socioService.actualizar(this.formulario.value).subscribe(
           res => {
             var respuesta = res.json();
             if(respuesta.codigo == 200) {
@@ -315,7 +286,7 @@ public accion(indice) {
     else{
       this.formulario.get('foto').setValue(this.fotoCliente);
       this.formulario.get('autorizados').setValue(this.listaLesionesAgregadas);
-        this.ejercicioService.actualizar(this.formulario.value).subscribe(
+        this.socioService.actualizar(this.formulario.value).subscribe(
           res => {
             var respuesta = res.json();
             if(respuesta.codigo == 200) {
@@ -340,7 +311,7 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.ejercicioService.agregar(this.formulario.get('id').value).subscribe(
+    this.socioService.agregar(this.formulario.get('id').value).subscribe(
       res => {
         console.log(res);
       },
@@ -349,71 +320,11 @@ public accion(indice) {
       }
     );
   }
-  // Carga en el select Roles
-  
-  private listarGruposGenerales(){
-    this.grupoGeneralService.listar().subscribe(
-      res => {
-        this.listaGrupoGenerales=res.json();
-        console.log(this.listaGrupoGenerales);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-  private listarGruposMusculares(){
-    this.grupoMuscularService.listar().subscribe(
-      res => {
-        this.listaGrupoMusculares=res.json();
-        console.log(this.listaGrupoMusculares);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-  private listarGruposMaquinas(){
-    this.grupoMaquinaService.listar().subscribe(
-      res => {
-        this.listaGrupoMaquinas=res.json();
-        console.log(this.listaGrupoMaquinas);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-  
   //Define el mostrado de datos y comparacion en campo select
   public compareFn = this.compararFn.bind(this);
   private compararFn(a, b) {
     if(a != null && b != null) {
       return a.id === b.id;
-    }
-  }
-  // añade un autorizado seleccionado a la lista
-  public addLesiones(lesion) {
-    this.lesionElegida.push(lesion.id);
-    this.listaLesionesAgregadas.push(lesion);// formato para mostrar en tabla las lesiones elegidas
-    var l={
-      idLesion: lesion.id
-    }
-    this.listaLesionesAgregadasId.push(l);// formato que me pide la Api para agregar un ejercicio
-    this.lesiones.setValue(null);//seteo autocompletado a null
-  }
-  // elimina un autorizado seleccionado de la lista
-  public  deleteLesion(lesion) {
-    console.log(this.listaLesionesAgregadas);
-    console.log(this.listaLesionesAgregadasId);
-    console.log(this.lesionElegida);
-      for(let i=0; i< this.listaLesionesAgregadas.length; i++ ){
-          if(lesion==this.listaLesionesAgregadas[i]){
-            this.listaLesionesAgregadas.splice(i, 1);
-            this.listaLesionesAgregadasId.splice(i,1);
-            this.lesionElegida.splice(i,1);
-        }
-      
     }
   }
   //metodo cargar imagen
@@ -446,16 +357,6 @@ public accion(indice) {
       this.idFoto=1;
     }
   }
-  //lista en la tabla todos los autorizados seleccionados por el Cliente
-  public listarAutorizado(elemento){
-    for(let i=0;i<elemento.lesiones.length; i++){
-      this.listaLesionesAgregadas.push(elemento.lesiones[i]);
-    }
-  }
-  //borro todo lo que tenga cargada la lista de Lesiones seleccionadas
-  public borrarAgregados(){
-    this.listaLesionesAgregadas.splice(0, this.listaLesionesAgregadas.length);
-  }
   //Reestablece los campos formularios
   private reestablecerFormulario(id) {
     this.formulario.reset();
@@ -463,8 +364,6 @@ public accion(indice) {
     this.autocompletado.setValue(undefined);
     this.lesiones.setValue(undefined);
     this.resultados = [];
-    this.listaLesiones = [];
-    this.borrarAgregados();
   }
   //Manejo de colores de campos y labels
   public cambioCampo(id, label) {
@@ -476,10 +375,6 @@ public accion(indice) {
     this.seleccionarPestania(2, this.pestanias[1].pestania.nombre, 1);
     this.autocompletado.setValue(elemento);
     this.formulario.patchValue(elemento);
-    //borro todo lo que tenga cargada la lista
-    this.borrarAgregados();
-    //agrego los autorizados del Cliente seleccionado
-    this.listarAutorizado(elemento);
     this.mostrarFotoCliente(elemento);
     this.muestraImagenPc=false;
   }
@@ -488,8 +383,6 @@ public accion(indice) {
     this.seleccionarPestania(3, this.pestanias[2].pestania.nombre, 1);
     this.autocompletado.setValue(elemento);
     this.formulario.patchValue(elemento);
-    this.borrarAgregados();
-    this.listarAutorizado(elemento);
     this.mostrarFotoCliente(elemento);
   }
   //Maneja los evento al presionar una tacla (para pestanias y opciones)

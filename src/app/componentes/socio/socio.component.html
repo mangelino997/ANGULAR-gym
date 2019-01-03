@@ -1,0 +1,216 @@
+<div id="area" class="container-fluid" (window:keydown)="manejarEvento($event.keyCode)">
+  <div class="row">
+    <div class="container text-center">
+      <nav mat-tab-nav-bar>
+          <a mat-tab-link disabled>Socio</a>
+          <a mat-tab-link
+             *ngFor="let pestania of pestanias"
+             [active]="activeLink== pestania.pestania.nombre"
+             (click)="seleccionarPestania(pestania.pestania.id, pestania.pestania.nombre)">
+            {{pestania.pestania.nombre}}
+          </a>
+        </nav>
+  </div>
+  </div>
+  <div class="row justify-content-center contenedor">
+    <h5>{{pestaniaActual}} Socio</h5>
+  </div>
+  <!-- <form [formGroup]="formulario" class="contenedor"> -->
+  <div class="row justify-content-center contenedor" *ngIf="indiceSeleccionado < 5">
+    <div class="col-md-8 text-center">
+      <form [formGroup]="formulario" class="contenedor">
+        <div class="row ">
+          <div class="col-md-8">
+            <div class="form-group has-float-label " *ngIf="mostrarAutocompletado">
+              <label for="idAutocompletado" class="tamanio-label">Buscar</label>
+              <input id="idAutocompletado" class="form-control form-control-sm color-busqueda"
+                type="text" matInput [formControl]="autocompletado" [matAutocomplete]="auto" autocomplete="off">
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                <mat-option *ngFor="let item of resultados" [value]="item"
+                  (onSelectionChange)="cambioAutocompletado(item)">
+                  {{item.alias}}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+          </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-4">
+              <div class="form-group has-float-label ">
+                <label for="idCodigo" class="tamanio-label">Código</label>
+                <input id="idCodigo" type="number" formControlName="id" class="form-control form-control-sm" readonly>
+              </div>
+            </div>
+        </div>
+        <div class="row ">
+          <div class="col-md-4">
+            <div class="form-group has-float-label">
+              <label id="labelNombre" for="idNombre" class="tamanio-label">Nombre *</label>
+              <input id="idNombre" type="text" formControlName="nombre" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group has-float-label">
+              <label id="labelNombre" for="idNombre" class="tamanio-label">Apellido *</label>
+              <input id="idNombre" type="text" formControlName="apellido" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group has-float-label">
+              <label id="labelNombre" for="idNombre" class="tamanio-label">DNI *</label>
+              <input id="idNombre" type="number" formControlName="dni" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+        </div>
+        <div class="row ">
+          <div class="col-md-4">
+            <div class="form-group has-float-label">
+              <label id="labelNombreUsuario" for="idNombreUsuario" class="tamanio-label">Nombre de Usuario</label>
+              <input id="idNombreUsuario" type="text" formControlName="nombreUsuario" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group has-float-label">
+              <label id="labelContrasenia" for="idContrasenia" class="tamanio-label">Contraseña </label>
+              <input id="idContrasenia" type="password" formControlName="contrasenia" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group has-float-label">
+              <label id="labelFechaNacimiento" for="idFechaNacimiento" class="tamanio-label">Fecha de Nacimiento</label>
+              <input id="idFechaNacimiento" type="date" formControlName="nacimiento" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group ">
+              <div class="form-group has-float-label">
+                  <label for="idEsVip" class="tamanio-label">Es Vip?</label>
+                  <mat-select class="form-control form-control-sm" id="idEsVip" formControlName="esVip" >
+                      <mat-option [value]="true">Sí </mat-option>
+                      <mat-option [value]="false">No </mat-option>
+                  </mat-select>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group has-float-label">
+              <label id="labelDireccion" for="idDireccion" class="tamanio-label">Dirección</label>
+              <input id="idDireccion" type="text" formControlName="direccion" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group has-float-label">
+              <label id="labelDireccionAlt" for="idDireccionAlt" class="tamanio-label">Dirección Alt</label>
+              <input id="idDireccionAlt" type="text" formControlName="direccionAlt" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <div class="form-group has-float-label">
+              <label id="labelCodArea" for="idCodArea" class="tamanio-label">Cod. Area</label>
+              <input id="idCodArea" type="text" formControlName="codArea" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group has-float-label">
+              <label id="labelTelefono" for="idTelefono" class="tamanio-label">Teléfono</label>
+              <input id="idTelefono" type="text" formControlName="telefono" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group has-float-label">
+              <label id="labelCodAreaAlt" for="idCodAreaAlt" class="tamanio-label">Cod. Area Alt</label>
+              <input id="idCodAreaAlt" type="text" formControlName="codAreaAlt" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group has-float-label">
+              <label id="labelTelefonoAlt" for="idTelefonoAlt" class="tamanio-label">Teléfono Alt</label>
+              <input id="idTelefonoAlt" type="text" formControlName="telefonoAlt" autocomplete="off"
+                class="form-control form-control-sm" [readonly]="soloLectura">
+            </div>
+          </div>
+        </div>
+        <button id="idBoton" *ngIf="mostrarBoton" class="btn btn-primary" type="button"
+          formnovalidate (click)="accion(indiceSeleccionado)" >
+          {{pestaniaActual}}
+        </button>
+      </form>
+    </div>
+    <div class="col-md-3 align-self-end">
+      <form [formGroup]="formularioFoto">
+        <div class="justify-content-center" style="text-align: center;">
+        <img id="imgSalida" width="50%" height="50%" src="http://localhost:8082/hibanaws/auth/foto/obtenerPorId/{{idFoto}}" *ngIf="indiceSeleccionado>0 && !muestraImagenPc"/>
+        <img id="imgSalida" width="50%" height="50%" src="assets/User.png" *ngIf="indiceSeleccionado>0 && muestraImagenPc">
+        </div>
+        <div class="input-group">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="file-input" id="file-input" placeholder="Subir Foto" formControlName="foto" (change)="cargandoImagen($event.target.files, $event)" multiple *ngIf="!soloLectura">
+              <label class="custom-file-label" id="imagen-nombre"></label>
+            </div>
+          </div>
+        </form>
+    </div>
+  </div>
+<!-- </form> -->
+  <div class="row justify-content-center contenedor" *ngIf="indiceSeleccionado == 5">
+    <div class="col-md-6">
+      <table class="table table-bordered table-striped table-sm">
+        <thead>
+          <tr>
+            <th class="text-center" style="width:10%" scope="col">N° de Cuenta</th>
+            <th class="text-center" style="width:10%" scope="col">Socio</th>
+            <th class="text-center" style="width:10%" scope="col">DNI</th>
+            <th class="text-center" style="width:20%" scope="col">Usuario</th>
+            <th class="text-center" style="width:20%" scope="col">Dirección</th>
+            <th class="text-center" style="width:10%" scope="col">Teléfono</th>
+            <th class="text-center" style="width:5%" scope="col">-</th>
+            <th class="text-center" style="width:5%" scope="col">-</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of listaCompleta">
+            <td >
+              <span>{{l.id}}</span>
+            </td>
+            <td >
+              <span>{{l.nombreCompleto}}</span>
+            </td>
+            <td >
+              <span>{{l.dni}}</span>
+            </td>
+            <td >
+              <span>{{l.nombreUsuario}}</span>
+            </td>
+            <td >
+              <span>{{l.direccion}}</span>
+            </td>
+            <td >
+              <span>{{l.telefono}}</span>
+            </td>
+            <td >
+              <span class="cursor-color" (click)="activarConsultar(l)">Ver</span>
+            </td>
+            <td >
+              <span class="cursor-color" (click)="activarActualizar(l)">Mod</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

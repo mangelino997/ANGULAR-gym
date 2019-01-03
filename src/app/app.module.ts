@@ -23,6 +23,9 @@ import { ActividadComponent } from './componentes/actividad/actividad.component'
 import { ActividadExtraComponent } from './componentes/actividad-extra/actividad-extra.component';
 import { ConceptoComponent } from './componentes/concepto/concepto.component';
 import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component';
+import { LesionComponent } from './componentes/lesion/lesion.component';
+import { ProfesorComponent } from './componentes/profesor/profesor.component';
+
 
 //SERVICIOS
 import { SubopcionService } from './servicios/subopcion.service';
@@ -37,6 +40,11 @@ import { ConceptoService } from './servicios/concepto.service';
 import { EjercicioService } from './servicios/ejercicio.service';
 import { FotoService } from './servicios/foto.service';
 import { LesionService } from './servicios/lesion.service';
+import { GrupoGeneralService } from './servicios/grupo-general.service';
+import { GrupoMaquinaService } from './servicios/grupo-maquina.service';
+import { GrupoMuscularService } from './servicios/grupo-muscular.service';
+import { ProfesorService } from './servicios/profesor.service';
+
 
 //MODELOS
 import { Usuario } from './modelos/usuario';
@@ -50,7 +58,10 @@ import { Concepto } from './modelos/concepto';
 import { Ejercicio } from './modelos/ejercicio';
 import { Foto } from './modelos/foto';
 import { Lesion } from './modelos/lesion';
-import { LesionComponent } from './componentes/lesion/lesion.component';
+import { Profesor } from './modelos/profesor';
+import { SocioComponent } from './componentes/socio/socio.component';
+import { SocioService } from './servicios/socio.service';
+import { Socio } from './modelos/socio';
 
 
 
@@ -66,7 +77,9 @@ import { LesionComponent } from './componentes/lesion/lesion.component';
     ActividadExtraComponent,
     ConceptoComponent,
     EjercicioComponent,
-    LesionComponent
+    LesionComponent,
+    ProfesorComponent,
+    SocioComponent
   ],
   imports: [
     BrowserModule,
@@ -112,6 +125,11 @@ import { LesionComponent } from './componentes/lesion/lesion.component';
     EjercicioService,
     FotoService,
     LesionService,
+    GrupoGeneralService,
+    GrupoMaquinaService,
+    GrupoMuscularService,
+    ProfesorService,
+    SocioService,
     Usuario,
     Modulo,
     Subopcion,
@@ -122,7 +140,9 @@ import { LesionComponent } from './componentes/lesion/lesion.component';
     Concepto,
     Ejercicio,
     Foto,
-    Lesion
+    Lesion,
+    Profesor,
+    Socio
 
   ],
   bootstrap: [AppComponent],

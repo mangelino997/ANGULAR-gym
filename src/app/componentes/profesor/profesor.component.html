@@ -2,7 +2,7 @@
   <div class="row">
     <div class="container text-center">
       <nav mat-tab-nav-bar>
-          <a mat-tab-link disabled>Rol</a>
+          <a mat-tab-link disabled>Profesor</a>
           <a mat-tab-link
              *ngFor="let pestania of pestanias"
              [active]="activeLink== pestania.pestania.nombre"
@@ -14,10 +14,10 @@
   </div>
   <div class="row justify-content-center contenedor" *ngIf="indiceSeleccionado < 5">
     <div class="col-md-4 text-center">
-      <h5>{{pestaniaActual}} Rol</h5>
+      <h5>{{pestaniaActual}} Profesor</h5>
       <form [formGroup]="formulario" class="contenedor">
         <div class="form-group has-float-label" *ngIf="mostrarAutocompletado">
-          <label for="idAutocompletado" class="tamanio-label">Buscar por Nombre</label>
+          <label for="idAutocompletado" class="tamanio-label">Buscar </label>
           <input id="idAutocompletado" class="form-control form-control-sm color-busqueda"
             type="text" matInput [formControl]="autocompletado" [matAutocomplete]="auto" autocomplete="off">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
@@ -36,8 +36,13 @@
           <input id="idNombre" type="text" formControlName="nombre" autocomplete="off"
             class="form-control form-control-sm" [readonly]="soloLectura">
         </div>
+        <div class="form-group has-float-label">
+          <label id="labelNombre" for="idNombre" class="tamanio-label">DNI *</label>
+          <input id="idNombre" type="number" formControlName="dni" autocomplete="off"
+            class="form-control form-control-sm" [readonly]="soloLectura">
+        </div>
         <button id="idBoton" *ngIf="mostrarBoton" class="btn btn-primary" type="button"
-          formnovalidate (click)="accion(indiceSeleccionado)" >
+          formnovalidate (click)="accion(indiceSeleccionado)">
           {{pestaniaActual}}
         </button>
       </form>
@@ -49,7 +54,8 @@
         <thead>
           <tr>
             <th class="text-center" style="width:20%" scope="col">#</th>
-            <th class="text-center" style="width:80%" scope="col">Nombre</th>
+            <th class="text-center" style="width:30%" scope="col">Nombre</th>
+            <th class="text-center" style="width:30%" scope="col">DNI</th>
             <th class="text-center" style="width:10%" scope="col">-</th>
             <th class="text-center" style="width:10%" scope="col">-</th>
           </tr>
@@ -61,6 +67,9 @@
             </td>
             <td >
               <span>{{l.nombre}}</span>
+            </td>
+            <td >
+              <span>{{l.dni}}</span>
             </td>
             <td >
               <span class="cursor-color" (click)="activarConsultar(l)">Ver</span>
