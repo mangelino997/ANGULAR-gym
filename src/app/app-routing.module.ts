@@ -13,7 +13,7 @@ import { ProfesorComponent } from './componentes/profesor/profesor.component';
 import { SocioComponent } from './componentes/socio/socio.component';
 
 const routes: Routes = [
-  {path: '', component: SocioComponent}
+  {path: '', component: EjercicioComponent}
 ];
 
 @NgModule({

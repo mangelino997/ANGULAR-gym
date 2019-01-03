@@ -178,14 +178,17 @@ export class EjercicioComponent implements OnInit {
     case 2:
       this.mostrarFotoCliente(this.idFoto);
       this.establecerValoresPestania(nombre, true, true, false, 'idAutocompletado');
+      this.muestraImagenPc=false;
       break;
     case 3:
       this.mostrarFotoCliente(this.idFoto);
       this.establecerValoresPestania(nombre, true, false, true, 'idAutocompletado');
+      this.muestraImagenPc=false;
       break;
     case 4:
       this.mostrarFotoCliente(this.idFoto);
       this.establecerValoresPestania(nombre, true, true, true, 'idAutocompletado');
+      this.muestraImagenPc=false;
       break;
     default:
       break;
@@ -231,9 +234,7 @@ public accion(indice) {
     );
   }
   //Agrega un registro 
-  private agregar(){
-    console.log(this.listaLesionesAgregadas);
-    
+  private agregar(){    
     this.fotoService.postFileImagen(this.archivo).subscribe(res=>{
       var respuesta = res.json();
       var id= respuesta.id-1; //al id devuelto en la respuesta se le debe restar 1 para obtener el correcto id de la imagen
@@ -242,8 +243,6 @@ public accion(indice) {
       }
       console.log(respuesta);
       this.formulario.get('idImagen').setValue(foto.id);
-      console.log(this.formulario.value);
-      console.log(this.listaLesionesAgregadas);
       //obtiene el array de autorizados agregados y los guarda en el campo 'autorizados' del formulario
       this.formulario.get('lesiones').setValue(this.listaLesionesAgregadasId);
       this.formulario.get('idGrupoGeneral').setValue(1);
@@ -284,7 +283,6 @@ public accion(indice) {
           id: id
         }
         this.formulario.get('idImagen').setValue(foto.id);
-        this.formulario.get('autorizados').setValue(this.listaLesionesAgregadas);
         this.ejercicioService.actualizar(this.formulario.value).subscribe(
           res => {
             var respuesta = res.json();
@@ -459,6 +457,8 @@ public accion(indice) {
     this.resultados = [];
     this.listaLesiones = [];
     this.borrarAgregados();
+    this.muestraImagenPc=true;
+
   }
   //Manejo de colores de campos y labels
   public cambioCampo(id, label) {
@@ -485,6 +485,8 @@ public accion(indice) {
     this.borrarAgregados();
     this.listarAutorizado(elemento);
     this.mostrarFotoCliente(elemento);
+    this.muestraImagenPc=false;
+
   }
   //Maneja los evento al presionar una tacla (para pestanias y opciones)
   public manejarEvento(keycode) {

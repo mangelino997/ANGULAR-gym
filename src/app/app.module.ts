@@ -25,6 +25,7 @@ import { ConceptoComponent } from './componentes/concepto/concepto.component';
 import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component';
 import { LesionComponent } from './componentes/lesion/lesion.component';
 import { ProfesorComponent } from './componentes/profesor/profesor.component';
+import { VentaComponent } from './componentes/venta/venta.component';
 
 
 //SERVICIOS
@@ -44,6 +45,7 @@ import { GrupoGeneralService } from './servicios/grupo-general.service';
 import { GrupoMaquinaService } from './servicios/grupo-maquina.service';
 import { GrupoMuscularService } from './servicios/grupo-muscular.service';
 import { ProfesorService } from './servicios/profesor.service';
+import { VentaService } from './servicios/venta.service';
 
 
 //MODELOS
@@ -63,8 +65,6 @@ import { SocioComponent } from './componentes/socio/socio.component';
 import { SocioService } from './servicios/socio.service';
 import { Socio } from './modelos/socio';
 import { Venta } from './modelos/venta';
-import { VentaComponent } from './componentes/venta/venta.component';
-import { VentaService } from './servicios/venta.service';
 
 
 
