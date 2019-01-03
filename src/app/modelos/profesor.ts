@@ -10,7 +10,7 @@ export class Profesor {
         this.formulario = new FormGroup({
             id: new FormControl(),
             version: new FormControl(),
-            nombre: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+            nombre: new FormControl('', [Validators.required, Validators.maxLength(30)]),
             dni: new FormControl('', [Validators.required, Validators.maxLength(8)]),
             codigoIngreso: new FormControl('', Validators.maxLength(10))
         })

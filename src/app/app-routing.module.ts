@@ -9,9 +9,11 @@ import { ActividadExtraComponent } from './componentes/actividad-extra/actividad
 import { ConceptoComponent } from './componentes/concepto/concepto.component';
 import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component';
 import { LesionComponent } from './componentes/lesion/lesion.component';
+import { ProfesorComponent } from './componentes/profesor/profesor.component';
+import { SocioComponent } from './componentes/socio/socio.component';
 
 const routes: Routes = [
-  {path: '', component: EjercicioComponent}
+  {path: '', component: SocioComponent}
 ];
 
 @NgModule({

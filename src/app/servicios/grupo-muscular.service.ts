@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
 import { AppService } from './app.service';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 
 //Define operaciones contra el servicio web.
 @Injectable({
   providedIn: 'root'
 })
-export class ProfesorService {
+export class GrupoMuscularService {
   //define la url contra el servicio web
   private url: string;
   private opciones: any;
   //constructor
-  constructor(private appService: AppService, private http: Http) {
-    this.url = appService.getUrlBase() + '/profesor';
+  constructor(private appService: AppService, private http: Http, private httpClient: HttpClient) {
+    this.url = appService.getUrlBase() + '/grupoMuscular';
     const cabecera: Headers = new Headers();
     cabecera.append('Content-Type', 'application/json');
     this.opciones= new RequestOptions({
       headers: cabecera
     });
+    
   }
   //obtiene el siguiente Id
   public obtenerSiguienteId() {
@@ -27,14 +29,12 @@ export class ProfesorService {
   public listarPorNombre(nombre) {
     return this.http.get(this.url + '/listarPorNombre/'+nombre);
   }
+ 
   //obtiene la lista completa de registros
   public listar() {
     return this.http.get(this.url);
   }
-  //agrega un registro
-  public agregar(elemento) {
-    return this.http.post(this.url, elemento);
-  }
+  
   //actualiza un registro
   public actualizar(elemento) {
     return this.http.put(this.url, elemento);
@@ -44,3 +44,4 @@ export class ProfesorService {
     return this.http.delete(this.url, idRegistro);
   }
 }
+
