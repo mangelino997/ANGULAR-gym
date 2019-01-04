@@ -17,11 +17,11 @@
         <div class="row">
           <div class="col-md-3">
             <div class="form-group has-float-label ">
-              <label for="idModalidadPago" class="labelModalidadPago">Socio</label>
-              <input id="idModalidadPago" class="form-control form-control-sm color-busqueda"
-                type="text" matInput [formControl]="socio" [matAutocomplete]="auto" autocomplete="off" >
+              <label for="idSocio" class="labelSocio">Socio</label>
+              <input id="idSocio" class="form-control form-control-sm color-busqueda"
+                type="text" matInput [formControl]="autocompletado" [matAutocomplete]="auto" autocomplete="off" >
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                <mat-option *ngFor="let socio of resultadosSocios" [value]="socio" (click)="cambioSocio(socio)">
+                <mat-option *ngFor="let socio of resultadoSocio" [value]="socio" (onSelectionChange)="cambioAutocompletadoSocio(socio)">
                   {{socio.alias}}
                 </mat-option>
               </mat-autocomplete>
@@ -31,8 +31,10 @@
             <div class="form-group ">
               <div class="form-group has-float-label">
                   <label for="idConcepto" class="tamanio-label">Concepto</label>
-                  <mat-select class="form-control" id="idConcepto" formControlName="idConcepto" [compareWith]="compareFn">
-                      <mat-option *ngFor="let concepto of listaConcepto" [value]="concepto"> {{concepto.nombre }}</mat-option>
+                  <mat-select class="form-control form-control-sm" id="idConcepto" [formControl]="concepto" [compareWith]="compareFn">
+                      <mat-option *ngFor="let concepto of listaConcepto" [value]="concepto" (click)="cambioAutocompletadoConcepto(concepto)">
+                        {{concepto.nombre }}
+                      </mat-option>
                   </mat-select>
                 </div>
             </div>
@@ -41,7 +43,7 @@
             <div class="form-group ">
               <div class="form-group has-float-label">
                   <label for="idMes" class="tamanio-label">Mes a Pagar</label>
-                  <mat-select class="form-control" id="idMes" formControlName="mes" [compareWith]="compareFn">
+                  <mat-select class="form-control form-control-sm" id="idMes" formControlName="mes">
                     <mat-option [value]="01" >Enero </mat-option>
                     <mat-option [value]="02">Febrero </mat-option>
                     <mat-option [value]="03" >Marzo </mat-option>
@@ -58,105 +60,94 @@
                 </div>
             </div>
           </div>
-          <div class="col-md-2" *ngIf="!mostrarMesAPagar">
+          <div class="col-md-4" *ngIf="!mostrarMesAPagar">
             <div class="form-group has-float-label">
               <label id="labelCantidad" for="idCantidad" class="tamanio-label">Cantidad</label>
-              <input id="idCantidad" type="number" [formControl]="cantidad" autocomplete="off"
-                class="form-control form-control-sm" [readonly]="soloLectura">
+              <input id="idCantidad" type="number" [formControl]="cantidad" autocomplete="off" (blur)="calcularImporteSiNoEsCuota()"
+                class="form-control form-control-sm" >
             </div>
           </div>
-          <div class="col-md-2" >
+          <div class="col-md-2" *ngIf="mostrarMesAPagar">
             <div class="form-group has-float-label">
               <label id="labelTelefono" for="idTelefono" class="tamanio-label">Año</label>
-              <input id="idTelefono" type="number" formControlName="anio" autocomplete="off" maxlength="4"
-                class="form-control form-control-sm" [readonly]="soloLectura">
+              <input id="idTelefono" type="text" formControlName="anio" autocomplete="off" pattern="[0-9]" maxlength="4" 
+                class="form-control form-control-sm" >
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="form-group has-float-label">
               <label for="idTipoFactura" class="labelTipoFactura">Importe</label>
-              <input id="idTipoFactura" type="number" formControlName="Importe" autocomplete="off" class="form-control form-control-sm" readonly>
+              <input id="idTipoFactura" type="number" [formControl]="importe" autocomplete="off" class="form-control form-control-sm" readonly>
             </div>
           </div>
-          
-        </div>
+          <div class="col-md-1">
+            <button id="idBotonAgregar" class="btn btn-primary btn-sm" type="button" (click)="agregarElemento()" >
+              Agregar
+            </button>
+        </div>        
+      </div>
         <div class="row">
-            <div class="col-md-12">
-              <div formArrayName="formulariosCompra" >
+              <div class="col-md-12">
                 <table class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
                         <th class="text-center" style="width:5%" scope="col">#</th>
-                        <th class="text-center" style="width:15%" scope="col">Tipo de Formulario</th>
-                        <th class="text-center" style="width:15%" scope="col">Precio c/u ($)</th>
-                        <th class="text-center" style="width:15%" scope="col">N° Desde</th>
-                        <th class="text-center" style="width:15%" scope="col">N° Hasta</th>
-                        <th class="text-center" style="width:10%" scope="col">Cantidad</th>
-                        <th class="text-center" style="width:20%" scope="col">Precio Total ($)</th>
+                        <th class="text-center" style="width:15%" scope="col">Socio</th>
+                        <th class="text-center" style="width:15%" scope="col">Concepto</th>
+                        <th class="text-center" style="width:15%" scope="col">Mes a pagar/Cantidad</th>
+                        <th class="text-center" style="width:20%" scope="col">Importe ($)</th>
                         <th class="text-center" style="width:5%" scope="col" >
-                          <span class="" (click)="agregarElemento()">+</span>
+                          <span class="" (click)="eliminarElemento()">-</span>
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr  *ngFor="let a of formulario.get('formulariosCompra').controls; let i = index" [formGroupName]="i"> 
+                      <tr  *ngFor="let a of listaAgregar; let i = index" > 
                         <td class="td-edicion-tabla">
                           <span>{{i+1}}</span>
                         </td>
                         <td class="td-edicion-tabla">
-                          <input id="idTipoFormulario" class="form-control form-control-sm" formControlName="tipoFormulario"
-                            type="text" matInput [formControl]="buscarTipoFormulario" [matAutocomplete]="autoFormulario" 
-                            autocomplete="off" >
-                          <mat-autocomplete #autoFormulario="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                            <mat-option *ngFor="let tipoFormulario of resultadosTiposFormularios" [value]="tipoFormulario" (onSelectionChange)="cambioAutocompletadoTipoFormulario(tipoFormulario, i)">
-                              {{tipoFormulario.alias}}
-                            </mat-option>
-                          </mat-autocomplete>
+                          <span>{{nombreDelSocio}}</span>
                         </td>
                         <td class="td-edicion-tabla">
-                          <input id="idTipoFormulario" class="form-control form-control-sm" formControlName="precioUnitario" [readonly]="soloLectura">
+                            <span>{{a.concepto}}</span>
+                        </td>
+                        <td class="td-edicion-tabla" *ngIf="a.cantidad!=0; else mostrarMes">
+                            <span>{{a.cantidad}}</span>
+                        </td>
+                        <ng-template #mostrarMes>
+                            <span>{{a.mes}}</span>
+                        </ng-template>
+                        <td class="td-edicion-tabla">
+                            <span>{{a.importe}}</span>
                         </td>
                         <td class="td-edicion-tabla">
-                          <input id="idTipoFormulario" class="form-control form-control-sm" formControlName="numeracionDesde" type="number">
-                        </td>
-                        <td class="td-edicion-tabla">
-                          <input id="idTipoFormulario" class="form-control form-control-sm" formControlName="numeracionHasta" type="number" (blur)="calcularCantidad(i)">
-                        </td>
-                        <td class="td-edicion-tabla">
-                            <input id="idTipoFormulario" class="form-control form-control-sm" formControlName="cantidad" [readonly]="soloLectura">
-                        </td>
-                        <td class="td-edicion-tabla">
-                          <input id="idTipoFormulario" class="form-control form-control-sm" formControlName="montoTotal" type="number" [readonly]="soloLectura">
-                        </td>
-                        <td class="td-edicion-tabla">
-                          <span class="cursor-color" (click)="eliminarElemento(i)">X</span>
+                          <span class="cursor-color" (click)="eliminarElemento(i, a.importe)">X</span>
                         </td>
                       </tr>
                     </tbody>
                 </table>
               </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3">
-                <div class="form-group has-float-label">
-                <label for="idProveedor" class="labelProveedor">{{tipoModalidadPago}} ($)</label>
-                <input id="idProveedor" type="number" formControlName="increDesc" autocomplete="off" class="form-control form-control-sm" (blur)="aplicarDescuentoIncremento()">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group has-float-label">
-                <label for="idTipoFactura" class="labelTipoFactura">Precio Factura</label>
-                <input id="idTipoFactura" type="text" formControlName="monto" autocomplete="off" class="form-control form-control-sm"
-                  [readonly]="soloLectura">
+          </div>
+          <div class="row">
+            <div class="col-md-3 text-right">
+              <div class="form-group has-float-label" >
+                <label for="idCantidad" class="labelCantidad">Importe Total ($)</label>
+                <input id="idCantidad" type="number" formControlName="importeTotal" autocomplete="off" class="form-control form-control-sm" (blur)="aplicarAbona()" readonly>
               </div>
             </div>
-        </div>
-        <button id="idBoton" class="btn btn-primary" type="button" (click)="agregar()">
-          Guardar
-        </button>
+          </div>
+          <div class="row">
+            <div class="col-md-3 text-right">
+              <div class="form-group has-float-label" >
+                <label for="idCantidad" class="labelCantidad">Abona ($)</label>
+                <input id="idCantidad" type="number" formControlName="importeAbona" autocomplete="off" class="form-control form-control-sm" >
+              </div>
+            </div>
+          </div>
+          <button id="idBoton" class="btn btn-primary" type="button" (click)="agregar()">
+            Guardar
+          </button>
       </form>
     </div>
   </div>

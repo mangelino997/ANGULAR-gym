@@ -12,14 +12,18 @@ export class Venta {
             version: new FormControl(),
             idConcepto: new FormControl(),
             fecha: new FormControl(),
-            mes: new FormControl([Validators.required, Validators.maxLength(10)]),
+            mes: new FormControl('',[Validators.required, Validators.maxLength(10)]),
             anio: new FormControl('', [Validators.required, Validators.maxLength(10)]),
             importe: new FormControl('', Validators.required),
             saldo: new FormControl('', Validators.required),
             estaActivo: new FormControl('', Validators.required),
             idSocio: new FormControl('', Validators.required),
             idUsuarioAlta: new FormControl('', Validators.required),
-            idUsuarioMod: new FormControl()
+            idUsuarioMod: new FormControl(),
+            importeAbona: new FormControl(),
+            importeTotal: new FormControl(),
+            consumos: new FormControl()
+
         })
     }
 }

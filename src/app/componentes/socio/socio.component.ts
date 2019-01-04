@@ -96,7 +96,7 @@ export class SocioComponent implements OnInit {
       }
     );
     //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(3, 'Agregar', 0);
+    this.seleccionarPestania(1, 'Agregar', 0);
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
     // inicializa en false
