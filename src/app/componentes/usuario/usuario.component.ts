@@ -65,7 +65,7 @@ export class UsuarioComponent implements OnInit {
       }
     );
     //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(1, 'Agregar', 0);
+    this.seleccionarPestania(2, 'Agregar', 0);
     //Cargar el campo select con la lista de Roles
     this.listarRoles();
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
@@ -86,14 +86,23 @@ export class UsuarioComponent implements OnInit {
     }
   }
   //Funcion para establecer los valores de las pestañas
-  private establecerValoresPestania(nombrePestania, autocompletado, soloLectura, boton, componente) {
+  private establecerValoresPestania(nombrePestania, autocompletado, soloLectura, boton, componente, deshabilitar) {
     this.pestaniaActual = nombrePestania;
     this.mostrarAutocompletado = autocompletado;
     this.soloLectura = soloLectura;
     this.mostrarBoton = boton;
+    this.listar();
     setTimeout(function () {
       document.getElementById(componente).focus();
     }, 20);
+    if(deshabilitar==true){
+      this.formulario.get('rol').disable();
+      this.formulario.get('estaActivo').disable();
+    }
+    else{
+      this.formulario.get('rol').enable();
+      this.formulario.get('estaActivo').enable();
+    }
   };
   //Establece valores al seleccionar una pestania
   public seleccionarPestania(id, nombre, opcion) {
@@ -111,16 +120,16 @@ export class UsuarioComponent implements OnInit {
   switch (id) {
     case 1:
       this.obtenerSiguienteId();
-      this.establecerValoresPestania(nombre, false, false, true, 'idNombre');
+      this.establecerValoresPestania(nombre, false, false, true, 'idNombre', false);
       break;
     case 2:
-      this.establecerValoresPestania(nombre, true, true, false, 'idAutocompletado');
+      this.establecerValoresPestania(nombre, true, true, false, 'idAutocompletado',true);
       break;
     case 3:
-      this.establecerValoresPestania(nombre, true, false, true, 'idAutocompletado');
+      this.establecerValoresPestania(nombre, true, false, true, 'idAutocompletado', false);
       break;
     case 4:
-      this.establecerValoresPestania(nombre, true, true, true, 'idAutocompletado');
+      this.establecerValoresPestania(nombre, true, true, true, 'idAutocompletado', false);
       break;
     default:
       break;
@@ -146,11 +155,9 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.usuarioServicio.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
         this.formulario.get('id').setValue(res.json());
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -159,10 +166,8 @@ public accion(indice) {
     this.usuarioServicio.listar().subscribe(
       res => {
         this.listaCompleta=res.json();
-        console.log(this.listaCompleta);
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -218,10 +223,8 @@ public accion(indice) {
   private eliminar(){
     this.usuarioServicio.agregar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -230,10 +233,8 @@ public accion(indice) {
     this.rolServicio.listar().subscribe(
       res => {
         this.listaRoles=res.json();
-        console.log(this.listaRoles);
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -243,6 +244,7 @@ public accion(indice) {
     this.formulario.get('id').setValue(id);
     this.autocompletado.setValue(undefined);
     this.resultados = [];
+    this.obtenerSiguienteId();
   }
   //Manejo de colores de campos y labels
   public cambioCampo(id, label) {

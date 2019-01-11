@@ -57,7 +57,7 @@ export class ActividadComponent implements OnInit {
       }
     );
     //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(1, 'Agregar', 0);
+    this.seleccionarPestania(3, 'Agregar', 0);
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
   }
@@ -83,12 +83,15 @@ export class ActividadComponent implements OnInit {
     setTimeout(function () {
       document.getElementById(componente).focus();
     }, 20);
+    this.listar();
+
   };
   //Establece valores al seleccionar una pestania
   public seleccionarPestania(id, nombre, opcion) {
     this.formulario.reset();
     this.indiceSeleccionado = id;
     this.activeLink = nombre;
+
     /*
     * Se vacia el formulario solo cuando se cambia de pestania, no cuando
     * cuando se hace click en ver o mod de la pestania lista
@@ -135,11 +138,9 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.actividadService.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
         this.formulario.get('id').setValue(res.json());
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -150,7 +151,6 @@ public accion(indice) {
         this.listaCompleta=res.json();
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -180,6 +180,7 @@ public accion(indice) {
   }
   //Actualiza un registro
   private actualizar(){
+    console.log(this.formulario.value);
     this.actividadService.actualizar(this.formulario.value).subscribe(
       res => {
         var respuesta = res.json();
@@ -206,10 +207,8 @@ public accion(indice) {
   private eliminar(){
     this.actividadService.agregar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -219,6 +218,7 @@ public accion(indice) {
     this.formulario.get('id').setValue(id);
     this.autocompletado.setValue(undefined);
     this.resultados = [];
+    this.listar();
   }
   //Manejo de colores de campos y labels
   public cambioCampo(id, label) {

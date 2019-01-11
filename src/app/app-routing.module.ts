@@ -12,9 +12,10 @@ import { LesionComponent } from './componentes/lesion/lesion.component';
 import { ProfesorComponent } from './componentes/profesor/profesor.component';
 import { SocioComponent } from './componentes/socio/socio.component';
 import { VentaComponent } from './componentes/venta/venta.component';
+import { RolComponent } from './componentes/rol/rol.component';
 
 const routes: Routes = [
-  {path: '', component: VentaComponent}
+  {path: '', component: ActividadComponent}
 ];
 
 @NgModule({

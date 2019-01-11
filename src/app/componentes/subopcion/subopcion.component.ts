@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Modulo } from 'src/app/modelos/modulo';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { SubopcionPestaniaService } from 'src/app/servicios/subopcion-pestania.service';
 import { ToastrService } from 'ngx-toastr';
 import { SubopcionService } from 'src/app/servicios/subopcion.service';
@@ -50,11 +50,10 @@ export class SubopcionComponent implements OnInit {
         })
       }
     });
-    this.moduloAutocompletado.valueChanges.subscribe(data => {
+    this.formulario.get('modulo').valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.moduloServicio.listarPorNombre(data).subscribe(res => {
           this.modulosResultados = res.json();
-          console.log(res.json());
         })
       }
     });
@@ -123,8 +122,7 @@ export class SubopcionComponent implements OnInit {
   switch (id) {
     case 1:
       this.obtenerSiguienteId();
-      // this.establecerEstadoCampos(true);
-      this.establecerValoresPestania(nombre, true, false, true, 'idNombre');
+      this.establecerValoresPestania(nombre, false, false, true, 'idNombre');
       break;
     case 2:
       this.establecerEstadoCampos(false);
@@ -161,11 +159,9 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.subopcionServicio.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res.json());
         this.formulario.get('id').setValue(res.json());
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -174,10 +170,8 @@ public accion(indice) {
     this.subopcionServicio.listar().subscribe(
       res => {
         this.listaCompleta=res.json();
-        console.log(this.listaCompleta);
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -186,10 +180,8 @@ public accion(indice) {
     this.moduloServicio.listar().subscribe(
       res => {
         this.listaModulos=res.json();
-        console.log(this.listaModulos);
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -245,10 +237,8 @@ public accion(indice) {
   private eliminar(){
     this.subopcionServicio.agregar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
       },
       err => {
-        console.log(err);
       }
     );
   }

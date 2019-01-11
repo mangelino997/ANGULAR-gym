@@ -13,7 +13,7 @@
   </div>
   </div>
   <div class="row justify-content-center contenedor" *ngIf="indiceSeleccionado < 5">
-    <div class="col-md-6 text-center">
+    <div class="col-md-8 text-center">
       <h5>{{pestaniaActual}} Usuario</h5>
       <form [formGroup]="formulario" class="contenedor">
         <div class="row ">
@@ -25,7 +25,7 @@
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
                 <mat-option *ngFor="let item of resultados" [value]="item"
                   (onSelectionChange)="cambioAutocompletado(item)">
-                  {{item.alias}}
+                  {{item.nombre}}
                 </mat-option>
               </mat-autocomplete>
             </div>
@@ -51,7 +51,7 @@
           <div class="col-md-4">
           <div class="form-group has-float-label">
               <label id="" for="apellido" class="tamanio-label">Apellido*</label>
-              <input id="apellido" type="text" formControlName="apellido" autocomplete="off"
+              <input id="apellido" type="text" formControlName="apellido" autocomplete="off" [readonly]="soloLectura"
                 class="form-control form-control-sm" >
           </div>
           </div>
@@ -60,21 +60,21 @@
           <div class="col-md-4">
             <div class="form-group has-float-label">
               <label id="" for="idNombreUsuario" class="tamanio-label">Nombre de usuario*</label>
-              <input id="idNombreUsuario" type="text" formControlName="username" autocomplete="off"
+              <input id="idNombreUsuario" type="text" formControlName="username" autocomplete="off" [readonly]="soloLectura"
               class="form-control form-control-sm" >
             </div>
           </div>
           <div class="col-md-4">
               <div class="form-group has-float-label">
                 <label id="" for="idcontrasenia" class="tamanio-label">Contraseña*</label>
-                <input id="idcontrasenia" type="text" formControlName="password" autocomplete="off"
+                <input id="idcontrasenia" type="text" formControlName="password" autocomplete="off" [readonly]="soloLectura"
                 class="form-control form-control-sm" >
               </div>
           </div>
           <div class="col-md-4">
               <div class="form-group has-float-label">
                 <label id="" for="idcontraseniaRep" class="tamanio-label">Repetir contraseña*</label>
-                <input id="idcontraseniaRep" type="text" [formControl]="passwordRepeat" autocomplete="off"
+                <input id="idcontraseniaRep" type="text" [formControl]="passwordRepeat" autocomplete="off" [readonly]="soloLectura"
                 class="form-control form-control-sm" >
               </div>
           </div>

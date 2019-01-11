@@ -25,7 +25,7 @@ export class UsuarioService {
   }
   //obtiene un listado por nombre
   public listarPorNombre(nombre) {
-    return this.http.get(this.url + '/listarPorAlias/'+nombre);
+    return this.http.get(this.url + '/listarPorNombre/'+nombre);
   }
   //obtiene por Rol
   public listarPorRol(idRol) {

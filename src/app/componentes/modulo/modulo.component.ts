@@ -44,17 +44,9 @@ export class ModuloComponent implements OnInit {
       }
     })
   }
-  
   ngOnInit() {
     //inicializa el formulario y sus campos desde la clase Modulo.
     this.formulario= this.modulo.formulario;
-    // //Define el formulario y validaciones
-    // this.formulario = new FormGroup({
-    //   id: new FormControl(),
-    //   version: new FormControl(),
-    //   nombre: new FormControl('', [Validators.required, Validators.maxLength(45)])
-    // });
-    //Carga desde un principio las pestañas "Agregar, Consultar, Actualizar y listar"
     this.subopcionPestaniaServicio.listarPestaniasPorSubopcion(1).subscribe(
       res => {
         this.pestanias= res.json();
@@ -140,11 +132,9 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.moduloServicio.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
         this.formulario.get('id').setValue(res.json());
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -155,7 +145,6 @@ public accion(indice) {
         this.listaCompleta=res.json();
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -211,10 +200,8 @@ public accion(indice) {
   private eliminar(){
     this.moduloServicio.agregar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
       },
       err => {
-        console.log(err);
       }
     );
   }

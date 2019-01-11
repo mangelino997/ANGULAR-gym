@@ -65,6 +65,7 @@ import { SocioComponent } from './componentes/socio/socio.component';
 import { SocioService } from './servicios/socio.service';
 import { Socio } from './modelos/socio';
 import { Venta } from './modelos/venta';
+import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
 
 
 
@@ -83,7 +84,8 @@ import { Venta } from './modelos/venta';
     LesionComponent,
     ProfesorComponent,
     SocioComponent,
-    VentaComponent
+    VentaComponent,
+    CumpleaniosComponent
   ],
   imports: [
     BrowserModule,

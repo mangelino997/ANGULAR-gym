@@ -33,11 +33,11 @@
         </div>
         <div class="form-group has-float-label">
           <label id="labelNombre" for="idNombre" class="tamanio-label">Nombre *</label>
-          <input id="idNombre" type="text" class="form-control form-control-sm" formControlName="nombre" >
+          <input id="idNombre" type="text" class="form-control form-control-sm" formControlName="nombre" [readonly]="soloLectura">
         </div>
         <div class="form-group has-float-label">
           <label for="idImporte" class="tamanio-label">Importe</label>
-          <input id="idImporte" type="number" class="form-control form-control-sm" formControlName="precio"  >
+          <input id="idImporte" type="number" class="form-control form-control-sm" formControlName="precio" [readonly]="soloLectura" >
         </div>
         <button id="idBoton" *ngIf="mostrarBoton" class="btn btn-primary" type="button"
           formnovalidate (click)="accion(indiceSeleccionado)" >

@@ -45,8 +45,6 @@ export class PestaniaComponent implements OnInit {
       }
     })
   }
-
-  
   ngOnInit() {
     this.formulario= this.moduloPestania.formulario;
     //Carga desde un principio las pestañas "Agregar, Consultar, Actualizar y listar"
@@ -57,7 +55,7 @@ export class PestaniaComponent implements OnInit {
       }
     );
     //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(1, 'Agregar', 0);
+    this.seleccionarPestania(3, 'Agregar', 0);
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
   }
@@ -135,11 +133,9 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.pestaniaServicio.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
         this.formulario.get('id').setValue(res.json());
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -150,7 +146,6 @@ public accion(indice) {
         this.listaCompleta=res.json();
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -206,10 +201,8 @@ public accion(indice) {
   private eliminar(){
     this.pestaniaServicio.agregar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
       },
       err => {
-        console.log(err);
       }
     );
   }
