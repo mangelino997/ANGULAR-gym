@@ -58,7 +58,7 @@ export class ConceptoComponent implements OnInit {
       }
     );
     //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(1, 'Agregar', 0);
+    this.seleccionarPestania(5, 'Agregar', 0);
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
   }
@@ -136,11 +136,9 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.conceptoService.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
         this.formulario.get('id').setValue(res.json());
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -151,7 +149,6 @@ public accion(indice) {
         this.listaCompleta=res.json();
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -160,8 +157,7 @@ public accion(indice) {
     var usuario={
       id: 1
     }
-    this.formulario.get('idUsuarioAlta').setValue(usuario);
-    console.log(this.formulario.value);
+    this.formulario.get('usuarioAlta').setValue(usuario);
     this.conceptoService.agregar(this.formulario.value).subscribe(
       res => {
         var respuesta = res.json();
@@ -186,6 +182,15 @@ public accion(indice) {
   }
   //Actualiza un registro
   private actualizar(){
+    var usuario={
+      id: 1
+    }
+    var usuarioMod={
+      id: 1
+    }
+    this.formulario.get('usuarioAlta').setValue(usuario);
+    this.formulario.get('usuarioMod').setValue(usuarioMod);
+    console.log(this.formulario.value);
     this.conceptoService.actualizar(this.formulario.value).subscribe(
       res => {
         var respuesta = res.json();
@@ -210,13 +215,26 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.conceptoService.agregar(this.formulario.get('id').value).subscribe(
+    this.conceptoService.eliminar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
+        var respuesta = res.json();
+        if(respuesta.codigo == 200) {
+          this.reestablecerFormulario(undefined);
+          setTimeout(function() {
+            document.getElementById('idAutocompletado').focus();
+          }, 20);
+          this.toastr.success(respuesta.mensaje);
+        }
       },
       err => {
-        console.log(err);
+        var respuesta = err.json();
+        if(respuesta.codigo == 11002) {
+          document.getElementById("labelNombre").classList.add('label-error');
+          document.getElementById("idNombre").classList.add('is-invalid');
+          document.getElementById("idNombre").focus();
+          this.toastr.error(respuesta.mensaje);
       }
+    }
     );
   }
   //Reestablece los campos formularios

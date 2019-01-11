@@ -46,7 +46,6 @@ export class ActividadExtraComponent implements OnInit {
     //inicializa el valor por defecto en el campo Importe
     this.actividadExtraService.listar().subscribe(res=>{
       var respuesta = res.json();
-      console.log(respuesta[0].monto);
       this.formulario.setValue(respuesta[0]);
     })
     
