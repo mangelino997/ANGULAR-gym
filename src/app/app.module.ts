@@ -7,11 +7,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatMenuModule, MatToolbarModule, MatDividerModule,
   MatSelectModule, MatTabsModule, MatIconModule, MatCardModule, MatSidenavModule,
   MatAutocompleteModule, MatInputModule, MatRadioModule, MatTableModule, MatDialogModule,
-  MatProgressBarModule } from '@angular/material';
+  MatProgressBarModule, MatTooltipModule } from '@angular/material';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
-
 
 //COMPONENTES
 import { ModuloComponent } from './componentes/modulo/modulo.component';
@@ -26,7 +25,12 @@ import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component'
 import { LesionComponent } from './componentes/lesion/lesion.component';
 import { ProfesorComponent } from './componentes/profesor/profesor.component';
 import { VentaComponent } from './componentes/venta/venta.component';
-
+import { ToolbarComponent } from './componentes/home/toolbar/toolbar/toolbar.component';
+import { ToolbarProfileComponent } from './componentes/home/toolbar/toolbar-profile/toolbar-profile.component';
+import { HeaderComponent } from './componentes/home/sidenav/header/header/header.component';
+import { LogoComponent } from './componentes/home/sidenav/header/logo/logo.component';
+import { SidenavComponent } from './componentes/home/sidenav/sidenav/sidenav.component';
+import { FooterComponent } from './componentes/home/footer/footer.component';
 
 //SERVICIOS
 import { SubopcionService } from './servicios/subopcion.service';
@@ -47,7 +51,6 @@ import { GrupoMuscularService } from './servicios/grupo-muscular.service';
 import { ProfesorService } from './servicios/profesor.service';
 import { VentaService } from './servicios/venta.service';
 
-
 //MODELOS
 import { Usuario } from './modelos/usuario';
 import { Modulo } from './modelos/modulo';
@@ -66,8 +69,7 @@ import { SocioService } from './servicios/socio.service';
 import { Socio } from './modelos/socio';
 import { Venta } from './modelos/venta';
 import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
-
-
+import { ToolbarMenuComponent } from './componentes/home/toolbar-menu/toolbar-menu.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +87,14 @@ import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.comp
     ProfesorComponent,
     SocioComponent,
     VentaComponent,
-    CumpleaniosComponent
+    CumpleaniosComponent,
+    ToolbarComponent,
+    ToolbarProfileComponent,
+    HeaderComponent,
+    LogoComponent,
+    SidenavComponent,
+    FooterComponent,
+    ToolbarMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -110,6 +119,7 @@ import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.comp
     MatTableModule,
     MatDialogModule,
     MatProgressBarModule,
+    MatTooltipModule,
     HttpModule,
     ToastrModule.forRoot({
       timeOut: 3000,

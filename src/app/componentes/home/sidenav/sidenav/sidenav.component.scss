@@ -1,0 +1,35 @@
+.econtainer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.events {
+    width: 300px;
+    height: 200px;
+    overflow: auto;
+    border: 1px solid #555;
+}
+.padding-content {
+    padding: 20px 0px 0px 0px;
+}
+.backgroud-color {
+    background-color:#4F5F6F;
+    opacity: 10%;
+}
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.container-fluid {
+    width: 84% !important;
+    padding-right: 10px !important;
+    padding-left: 0px !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+.mat-raised-button {
+    min-width: 56px !important;
+}

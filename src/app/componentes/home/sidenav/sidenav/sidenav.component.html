@@ -1,0 +1,41 @@
+<mat-sidenav-container class="econtainer">
+  <mat-sidenav class="padding-content backgroud-color" #sidenav mode="side" [(opened)]="opened">
+    <div class="container-fluid text-center">
+      <div class="row">
+        <div class="col">
+          <app-header style="padding-left: 5px;"></app-header>
+          <br><br>
+          <button mat-raised-button color="accent" matTooltip="HOME" [matTooltipPosition]="position.value">
+            <mat-icon>home</mat-icon>
+          </button><br><br>
+          <button mat-raised-button color="primary" matTooltip="VENTA/CUOTA" [matTooltipPosition]="position.value">
+            <mat-icon>payment</mat-icon>
+          </button><br><br>
+          <button mat-raised-button color="accent" matTooltip="SOCIOS" [matTooltipPosition]="position.value">
+            <mat-icon>people</mat-icon>
+          </button><br><br>
+          <button mat-raised-button color="primary" matTooltip="PLANES" [matTooltipPosition]="position.value">
+            <mat-icon>fitness_center</mat-icon>
+          </button><br><br>
+          <button mat-raised-button color="accent" matTooltip="DEUDORES" [matTooltipPosition]="position.value">
+            <mat-icon>cancel_presentation</mat-icon>
+          </button><br><br>
+          <button mat-raised-button color="primary" matTooltip="VENCIDOS" [matTooltipPosition]="position.value">
+            <mat-icon>event_busy</mat-icon>
+          </button><br><br>
+          <button mat-raised-button color="accent" matTooltip="CUMPLEAÑOS" [matTooltipPosition]="position.value">
+            <mat-icon>cake</mat-icon>
+          </button><br><br>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-toolbar></app-toolbar>
+    <app-toolbar-menu></app-toolbar-menu>
+    <router-outlet></router-outlet>
+    <div class="footer">
+      <app-footer></app-footer>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

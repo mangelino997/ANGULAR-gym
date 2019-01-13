@@ -16,7 +16,7 @@ export class AppComponent {
   public subopcion: any;
 
   constructor(private moduloServicio: ModuloService, private router: Router) {
-    this.listarMenu();
+    // this.listarMenu();
     //Se subscribe al servicio de lista de registros
     // this.appService.listaCompleta.subscribe(res => {
     //   this.obtenerMenu();
