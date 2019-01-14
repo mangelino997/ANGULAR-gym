@@ -135,7 +135,6 @@ import { ToolbarMenuComponent } from './componentes/home/toolbar-menu/toolbar-me
     RolService,
     PestaniaService,
     UsuarioService,
-    ModuloService,
     ActividadExtraService,
     ConceptoService,
     EjercicioService,
