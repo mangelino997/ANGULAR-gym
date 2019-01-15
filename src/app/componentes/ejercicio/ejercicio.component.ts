@@ -82,7 +82,7 @@ export class EjercicioComponent implements OnInit {
   @ViewChild('inputAutorizado') inputLesiones: ElementRef;
   
   //declaramos en el constructor las clases de las cuales usaremos sus servicios/metodos
-  constructor(private appService: AppService ,private grupoGeneralService: GrupoGeneralService ,private grupoMaquinaService: GrupoMaquinaService, private grupoMuscularService: GrupoMuscularService, private lesionService: LesionService, private fotoService: ImagenService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
+  constructor(private appService: AppService ,private grupoGeneralService: GrupoGeneralService ,private grupoMaquinaService: GrupoMaquinaService, private grupoMuscularService: GrupoMuscularService, private lesionService: LesionService, private imagenService: ImagenService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.ejercicioService.listarPorNombre(data).subscribe(res => {
@@ -141,7 +141,7 @@ export class EjercicioComponent implements OnInit {
   public cambioAutocompletado(elemento) {
     this.formulario.patchValue(elemento);
     this.borrarAgregados();
-    this.listarAutorizado(elemento);
+    this.listarLesiones(elemento);
     this.mostrarFotoCliente(elemento);
   }
   //Formatea el valor del autocompletado
@@ -178,6 +178,7 @@ export class EjercicioComponent implements OnInit {
     this.indiceSeleccionado = id;
     this.activeLink = nombre;
     this.borrarAgregados();
+    this.listar();
     /*
     * Se vacia el formulario solo cuando se cambia de pestania, no cuando
     * cuando se hace click en ver o mod de la pestania lista
@@ -251,7 +252,7 @@ public accion(indice) {
   }
   //Agrega un registro 
   private agregar(){    
-    this.fotoService.postFileImagen(this.archivo).subscribe(res=>{
+    this.imagenService.postFileImagen(this.archivo).subscribe(res=>{
       var respuesta = res.json();
       var id= respuesta.id-1; //al id devuelto en la respuesta se le debe restar 1 para obtener el correcto id de la imagen
       let foto = { 
@@ -259,10 +260,7 @@ public accion(indice) {
       }
       this.formulario.get('idImagen').setValue(id);
       //obtiene el array de autorizados agregados y los guarda en el campo 'autorizados' del formulario
-      this.formulario.get('lesiones').setValue(this.listaLesionesAgregadasId);
-      this.formulario.get('idGrupoGeneral').setValue(1);
-      this.formulario.get('idGrupoMuscular').setValue(1);
-      this.formulario.get('idGrupoMaquina').setValue(1);
+      this.formulario.get('idLesiones').setValue(this.listaLesionesAgregadasId);
       console.log( this.formulario.value);
       this.ejercicioService.agregar(this.formulario.value).subscribe(
         res => {
@@ -291,7 +289,7 @@ public accion(indice) {
   private actualizar(){
     //obtiene el array de autorizados agregados y los guarda en el campo 'autorizados' del formulario
     if(this.bandera== true){
-      this.fotoService.postFileImagen(this.archivo).subscribe(res=>{
+      this.imagenService.postFileImagen(this.archivo).subscribe(res=>{
         var respuesta = res.json();
         var id= respuesta.id-1; //al id devuelto en la respuesta se le debe restar 1 para obtener el correcto id de la imagen
         let foto = { 
@@ -323,8 +321,8 @@ public accion(indice) {
       );
     }
     else{
-      this.formulario.get('foto').setValue(this.fotoCliente);
-      this.formulario.get('autorizados').setValue(this.listaLesionesAgregadas);
+      this.formulario.get('idImagen').setValue(this.fotoCliente);
+      this.formulario.get('idLesiones').setValue(this.listaLesionesAgregadas);
         this.ejercicioService.actualizar(this.formulario.value).subscribe(
           res => {
             var respuesta = res.json();
@@ -366,11 +364,12 @@ public accion(indice) {
         if(respuesta.codigo == 11002) {
           document.getElementById("labelNombre").classList.add('label-error');
           document.getElementById("idNombre").classList.add('is-invalid');
-          document.getElementById("idNombre").focus();
+          document.getElementById("idAutocompletado").focus();
           this.toastr.error(respuesta.mensaje);
         }
       }
     );
+    // this.imagenService.eliminar(this.formulario.get('idImagen'))
   }
   // Carga en el select Roles
   private listarGruposGenerales(){
@@ -414,14 +413,11 @@ public accion(indice) {
   public addLesiones(lesion) {
     this.lesionElegida.push(lesion.id);
     this.listaLesionesAgregadas.push(lesion);// formato para mostrar en tabla las lesiones elegidas
-    var l={
-      idLesion: lesion.id
-    }
-    this.listaLesionesAgregadasId.push(l);// formato que me pide la Api para agregar un ejercicio
+    this.listaLesionesAgregadasId.push(lesion.id);// formato que me pide la Api para agregar un ejercicio
     this.lesiones.setValue(null);//seteo autocompletado a null
   }
   // elimina un autorizado seleccionado de la lista
-  public  deleteLesion(lesion) {
+  public deleteLesion(lesion) {
       for(let i=0; i< this.listaLesionesAgregadas.length; i++ ){
           if(lesion==this.listaLesionesAgregadas[i]){
             this.listaLesionesAgregadas.splice(i, 1);
@@ -451,19 +447,19 @@ public accion(indice) {
   //mostrar Foto del Cliente en pestaña Actualizar, Consulat y Eliminar
   public mostrarFotoCliente(elemento){
     console.log("datos de la foto "+elemento);
-    if(elemento.foto!= null){
-      this.idFoto=elemento.foto.id;
-      this.fotoCliente=elemento.foto;
-    }else
-    {
-      this.idFoto=1;
-    }
+    // if(elemento.imagen.id!= null){
+    //   this.idFoto=elemento.imagen.id;
+    //   this.fotoCliente=elemento.imagen;
+    // }else
+    // {
+    //   this.idFoto=1;
+    // }
   }
-  //lista en la tabla todos los autorizados seleccionados por el Cliente
-  public listarAutorizado(elemento){
-    for(let i=0;i<elemento.lesiones.length; i++){
-      this.listaLesionesAgregadas.push(elemento.lesiones[i]);
-    }
+  //lista en la tabla todas las lesiones seleccionadas
+  public listarLesiones(elemento){
+    // for(let i=0;i<elemento.lesiones.length; i++){
+    //   this.listaLesionesAgregadas.push(elemento.lesiones[i]);
+    // }
   }
   //borro todo lo que tenga cargada la lista de Lesiones seleccionadas
   public borrarAgregados(){
@@ -472,14 +468,14 @@ public accion(indice) {
   //Reestablece los campos formularios
   private reestablecerFormulario(id) {
     this.formulario.reset();
-    this.formulario.get('id').setValue(id);
     this.autocompletado.setValue(undefined);
     this.lesiones.setValue(undefined);
     this.resultados = [];
     this.listaLesiones = [];
     this.borrarAgregados();
     this.muestraImagenPc=true;
-
+    this.obtenerSiguienteId();
+    this.listar();
   }
   //Manejo de colores de campos y labels
   public cambioCampo(id, label) {
@@ -488,13 +484,15 @@ public accion(indice) {
   };
   //Muestra en la pestania buscar el elemento seleccionado de listar
   public activarConsultar(elemento) {
+    console.log(elemento);
     this.seleccionarPestania(2, this.pestanias[1].pestania.nombre, 1);
     this.autocompletado.setValue(elemento);
     this.formulario.patchValue(elemento);
+    this.id.setValue(elemento.id);
     //borro todo lo que tenga cargada la lista
     this.borrarAgregados();
     //agrego los autorizados del Cliente seleccionado
-    this.listarAutorizado(elemento);
+    this.listarLesiones(elemento);
     this.mostrarFotoCliente(elemento);
     this.muestraImagenPc=false;
   }
@@ -503,8 +501,9 @@ public accion(indice) {
     this.seleccionarPestania(3, this.pestanias[2].pestania.nombre, 1);
     this.autocompletado.setValue(elemento);
     this.formulario.patchValue(elemento);
+    this.id.setValue(elemento.id);
     this.borrarAgregados();
-    this.listarAutorizado(elemento);
+    this.listarLesiones(elemento);
     this.mostrarFotoCliente(elemento);
     this.muestraImagenPc=false;
 

@@ -18,7 +18,7 @@ export class Venta {
             importe: new FormControl('', Validators.required),
             saldo: new FormControl('', Validators.required),
             estaActivo: new FormControl('', Validators.required),
-            idSocio: new FormControl('', Validators.required),
+            socio: new FormControl('', Validators.required),
             idUsuarioAlta: new FormControl('', Validators.required),
             idUsuarioMod: new FormControl(),
             importeAbona: new FormControl(),

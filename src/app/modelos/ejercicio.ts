@@ -14,7 +14,7 @@ export class Ejercicio {
             idGrupoMuscular: new FormControl('', Validators.required),
             idGrupoMaquina: new FormControl('', Validators.required),
             idImagen: new FormControl('', Validators.required),
-            lesiones: new FormControl(),
+            idLesiones: new FormControl(),
         })
     }
 }

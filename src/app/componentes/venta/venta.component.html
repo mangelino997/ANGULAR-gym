@@ -19,9 +19,9 @@
             <div class="form-group has-float-label ">
               <label for="idSocio" class="labelSocio">Socio</label>
               <input id="idSocio" class="form-control form-control-sm color-busqueda"
-                type="text" matInput [formControl]="autocompletado" [matAutocomplete]="auto" autocomplete="off" >
+                type="text" matInput [formControl]="formulario.get('socio')" [matAutocomplete]="auto" autocomplete="off" (optionSelected)="cambioAutocompletadoSocio()">
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                <mat-option *ngFor="let socio of resultadoSocio" [value]="socio" (onSelectionChange)="cambioAutocompletadoSocio(socio)">
+                <mat-option *ngFor="let socio of resultadoSocio" [value]="socio" > <!--(onSelectionChange)="cambioAutocompletadoSocio(socio)"-->
                   {{socio.alias}}
                 </mat-option>
               </mat-autocomplete>
@@ -31,7 +31,7 @@
             <div class="form-group ">
               <div class="form-group has-float-label">
                   <label for="idConcepto" class="tamanio-label">Concepto</label>
-                  <mat-select class="form-control form-control-sm" id="idConcepto" [formControl]="concepto" [compareWith]="compareFn">
+                  <mat-select class="form-control form-control-sm" id="idConcepto" [formControl]="formularioConsumo.get('concepto')" [compareWith]="compareFn">
                       <mat-option *ngFor="let concepto of listaConcepto" [value]="concepto" (click)="cambioAutocompletadoConcepto(concepto)">
                         {{concepto.nombre }}
                       </mat-option>
@@ -43,7 +43,7 @@
             <div class="form-group ">
               <div class="form-group has-float-label">
                   <label for="idMes" class="tamanio-label">Mes a Pagar</label>
-                  <mat-select class="form-control form-control-sm" id="idMes" formControlName="mes">
+                  <mat-select class="form-control form-control-sm" id="idMes" [formControl]="formularioConsumo.get('mes')" >
                     <mat-option [value]="01" >Enero </mat-option>
                     <mat-option [value]="02">Febrero </mat-option>
                     <mat-option [value]="03" >Marzo </mat-option>
@@ -63,21 +63,21 @@
           <div class="col-md-4" *ngIf="!mostrarMesAPagar">
             <div class="form-group has-float-label">
               <label id="labelCantidad" for="idCantidad" class="tamanio-label">Cantidad</label>
-              <input id="idCantidad" type="number" [formControl]="cantidad" autocomplete="off" (blur)="calcularImporteSiNoEsCuota()"
+              <input id="idCantidad" type="number" [formControl]="formularioConsumo.get('cantidad')" autocomplete="off" (blur)="calcularImporteSiNoEsCuota()"
                 class="form-control form-control-sm" >
             </div>
           </div>
           <div class="col-md-2" *ngIf="mostrarMesAPagar">
             <div class="form-group has-float-label">
               <label id="labelTelefono" for="idTelefono" class="tamanio-label">Año</label>
-              <input id="idTelefono" type="text" formControlName="anio" autocomplete="off" pattern="[0-9]" maxlength="4" 
+              <input id="idTelefono" type="text" formControlName="formularioConsumo.get('anio')" autocomplete="off" pattern="[0-9]" maxlength="4" 
                 class="form-control form-control-sm" >
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group has-float-label">
               <label for="idTipoFactura" class="labelTipoFactura">Importe</label>
-              <input id="idTipoFactura" type="number" [formControl]="importe" autocomplete="off" class="form-control form-control-sm" readonly>
+              <input id="idTipoFactura" type="number" [formControl]="formularioConsumo.get('importe')" autocomplete="off" class="form-control form-control-sm" readonly>
             </div>
           </div>
           <div class="col-md-1">

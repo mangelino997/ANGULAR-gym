@@ -85,7 +85,7 @@ export class SocioComponent implements OnInit {
       }
     );
     //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(3, 'Agregar', 0);
+    this.seleccionarPestania(1, 'Agregar', 0);
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
     // inicializa en false
@@ -225,12 +225,9 @@ public accion(indice) {
       let usuarioAlta = {
         id: 1
       };
-      console.log(this.formulario.value);
-      console.log(respuesta);
       this.formulario.get('foto').setValue(foto);
       this.formulario.get('usuarioAlta').setValue(usuarioAlta);
       this.formulario.get('estaActivo').setValue(true);
-      console.log(this.formulario.value);
       this.socioService.agregar(this.formulario.value).subscribe(
         res => {
           var respuesta = res.json();
@@ -276,12 +273,9 @@ public accion(indice) {
         let usuarioAlta = {
           id: 1
         };
-        console.log(this.formulario.value);
-        console.log(respuesta);
         this.formulario.get('foto').setValue(foto);
         this.formulario.get('usuarioAlta').setValue(usuarioAlta);
         this.formulario.get('estaActivo').setValue(true);
-        console.log(this.formulario.value);
         this.socioService.actualizar(this.formulario.value).subscribe(
           res => {
             var respuesta = res.json();

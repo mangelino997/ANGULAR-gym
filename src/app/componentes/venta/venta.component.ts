@@ -68,14 +68,7 @@ export class VentaComponent implements OnInit {
   public resultadoSocio = [];
 
   constructor(private conceptoService: ConceptoService ,private socioService: SocioService, private ventaService: VentaService ,private venta: Venta, private formBuilder: FormBuilder, private toastr: ToastrService) {
-    //Autocompletado - Buscar por Tipo de formulario
-    this.autocompletado.valueChanges.subscribe(data => {
-      if(typeof data == 'string') {
-        this.socioService.listarPorAlias(data).subscribe(response =>{
-          this.resultadoSocio = response.json();
-        })
-      }
-    })
+    
     //Establece la pestania activa por defecto
     this.activeLink = 1;
     //Establece el indice activo por defecto
@@ -91,16 +84,16 @@ export class VentaComponent implements OnInit {
     this.formulario.get('fecha').setValue(dateDay);
     //define el formulario de Consumos que es de tipo array (puede tener varias filas)
     this.formularioConsumo= this.venta.formularioConsumo;
-    /*
-    this.formularioConsumo = this.formBuilder.group({
-      importe: '',
-      cantidad: '',
-      concepto: '',
-      mes: '',
-      anio: ''
-    });*/
     //inicializa el select de concepto
     this.listarConcepto();
+    //Autocompletado - Buscar por Socio
+    this.formulario.get('socio').valueChanges.subscribe(data => {
+      if(typeof data == 'string') {
+        this.socioService.listarPorAlias(data).subscribe(response =>{
+          this.resultadoSocio = response.json();
+        })
+      }
+    })
   }
   // Carga en el select de Concepto
   private listarConcepto(){
