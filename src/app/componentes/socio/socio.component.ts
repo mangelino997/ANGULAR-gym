@@ -9,6 +9,7 @@ import { Socio } from 'src/app/modelos/socio';
 import { SocioService } from 'src/app/servicios/socio.service';
 import { Foto } from 'src/app/modelos/foto';
 import { FotoService } from 'src/app/servicios/foto.service';
+import { AppService } from 'src/app/servicios/app.service';
 @Component({
   selector: 'app-socio',
   templateUrl: './socio.component.html',
@@ -31,12 +32,10 @@ export class SocioComponent implements OnInit {
   public activeLink: any;
   // define el autocompletado como un formControl
   public autocompletado: FormControl=new FormControl();
-  // define el autocompletado de Lesiones como un formControl
-  public lesiones: FormControl=new FormControl();
+  // define el id/codigo como un formControl
+  public id: FormControl=new FormControl();
   //Define la pestania actual seleccionada
   public pestaniaActual:string = null;
-  //Define la pestania actual seleccionada
-  public lesionElegida:Array<any> = [];
   
   //Define si mostrar el autocompletado
   public mostrarAutocompletado:boolean = null;
@@ -50,34 +49,24 @@ export class SocioComponent implements OnInit {
   public indiceSeleccionado:number = null;
   //Define la lista de resultados de busqueda
   public resultados:Array<any> = [];
-  //Define la lista para mostrar las Lesiones en el autocompletado
-  public listaLesiones:Array<any> = [];
-  //Define la lista para las Lesiones seleccionadas 
-  public listaLesionesAgregadas:Array<any> = [];
-  //Define la lista para las Lesiones seleccionadas por su id
-  public listaLesionesAgregadasId:Array<any> = [];
   
-  //Define la lista para Grupos Generales
-  public listaGrupoGenerales:Array<any> = [];
-  //Define la lista para Grupos Musculares
-  public listaGrupoMusculares:Array<any> = [];
-  //Define la lista para Grupos Maquinas
-  public listaGrupoMaquinas:Array<any> = [];
   // guarda el json del campo Foto del cliente que se selecciono/actualizo
   public fotoCliente: number;
   //id de la foto del cliente para mostrarla en Consultar, Actualizar y Eliminar
   public idFoto: number=1;
-
+  //Define la ip 
+  public ip: any;
   bandera: boolean= false;
 
 
   
   //declaramos en el constructor las clases de las cuales usaremos sus servicios/metodos
-  constructor(  private socioService: SocioService, private foto:Foto, private fotoService: FotoService ,private socio: Socio  ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
+  constructor(private appService: AppService ,private socioService: SocioService, private foto:Foto, private fotoService: FotoService ,private socio: Socio  ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.socioService.listarPorAlias(data).subscribe(res => {
           this.resultados = res.json();
+
         })
       }
     });
@@ -96,11 +85,14 @@ export class SocioComponent implements OnInit {
       }
     );
     //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(1, 'Agregar', 0);
+    this.seleccionarPestania(3, 'Agregar', 0);
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
     // inicializa en false
     this.muestraImagenPc=true;
+    // setea la ip 
+    this.ip= this.appService.URL_BASE;
+    this.id.setValue(null);
   }
 
   //Establece el formulario al seleccionar elemento del autocompletado
@@ -108,6 +100,9 @@ export class SocioComponent implements OnInit {
     this.formulario.patchValue(elemento);
     this.mostrarFotoCliente(elemento);
     this.muestraImagenPc=false;
+    console.log(elemento.id);
+    this.id.setValue(elemento.id);
+
   }
   //Formatea el valor del autocompletado
   public displayFn(elemento) {
@@ -138,9 +133,7 @@ export class SocioComponent implements OnInit {
     */
    if(opcion == 0) {
     this.autocompletado.setValue(undefined);
-    this.lesiones.setValue(undefined);
     this.resultados = [];
-    this.listaLesiones = [];
   }
   switch (id) {
     case 1:
@@ -188,11 +181,10 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.socioService.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
-        this.formulario.get('id').setValue(res.json());
+        this.id.setValue(res.json());
       },
       err => {
-        console.log(err);
+        this.toastr.error("No se puede obtener el próximo ID");
       }
     );
   }
@@ -203,7 +195,7 @@ public accion(indice) {
         this.listaCompleta=res.json();
       },
       err => {
-        console.log(err);
+        this.toastr.error("No se puede obtener la lista completa");
       }
     );
   }
@@ -341,12 +333,33 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.socioService.agregar(this.formulario.get('id').value).subscribe(
+    this.fotoService.eliminar(this.formulario.get('foto.id').value).subscribe(res=>
+      res=>{
+        var res= res.json();
+        if(res.codigo == 200) {
+          this.toastr.success("Foto eliminada correctamentente");
+        }
+      }  
+    );
+    this.socioService.eliminar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
+        var respuesta = res.json();
+        if(respuesta.codigo == 200) {
+          this.reestablecerFormulario(undefined);
+          setTimeout(function() {
+            document.getElementById('idAutocompletado').focus();
+          }, 20);
+          this.toastr.success(respuesta.mensaje);
+        }
       },
       err => {
-        console.log(err);
+        var respuesta = err.json();
+        if(respuesta.codigo == 11002) {
+          document.getElementById("labelNombre").classList.add('label-error');
+          document.getElementById("idNombre").classList.add('is-invalid');
+          document.getElementById("idNombre").focus();
+          this.toastr.error(respuesta.mensaje);
+        }
       }
     );
   }
@@ -376,8 +389,6 @@ public accion(indice) {
     var reader = new FileReader();
     reader.onload = this.fileOnload;
     reader.readAsDataURL(this.archivo);
-
-    console.log(e);
     console.log('imagen adjuntada');
     this.bandera=true;
   }
@@ -388,7 +399,6 @@ public accion(indice) {
   }
   //mostrar Foto del Cliente en pestaña Actualizar, Consulat y Eliminar
   public mostrarFotoCliente(elemento){
-    console.log(elemento.foto);
     if(elemento.foto!= null){
       this.idFoto=elemento.foto.id;
       this.fotoCliente=elemento.foto;
@@ -402,7 +412,6 @@ public accion(indice) {
     this.formulario.reset();
     this.formulario.get('id').setValue(id);
     this.autocompletado.setValue(undefined);
-    this.lesiones.setValue(undefined);
     this.resultados = [];
     this.muestraImagenPc=true;
     this.formularioFoto.reset();

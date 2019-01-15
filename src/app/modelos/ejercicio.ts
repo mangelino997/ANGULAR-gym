@@ -8,6 +8,7 @@ export class Ejercicio {
     constructor() {
         // crear el formulario para la seccion de modulos
         this.formulario = new FormGroup({
+            version: new FormControl(),
             nombre: new FormControl('', [Validators.required, Validators.maxLength(20)]),
             idGrupoGeneral: new FormControl('', Validators.required),
             idGrupoMuscular: new FormControl('', Validators.required),

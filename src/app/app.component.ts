@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ModuloService } from './servicios/modulo.service';
 import { Router } from '@angular/router';
+import { AppService } from './servicios/app.service';
 
 
 @Component({
@@ -14,12 +15,14 @@ export class AppComponent {
   public usuario: any;
   public menu: Array<any>;
   public subopcion: any;
+  public ip: any;
 
-  constructor(private moduloServicio: ModuloService, private router: Router) {
+  constructor(private moduloServicio: ModuloService, private router: Router, private appService: AppService) {
     //Se subscribe al servicio de lista de registros
     // this.appService.listaCompleta.subscribe(res => {
     //   this.obtenerMenu();
     // });
+    this.ip= this.appService.URL_BASE;
   }
   
   public setVisible(valor) {

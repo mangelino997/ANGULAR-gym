@@ -3,7 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class Venta {
     //define un formulario FormGroup
     public formulario: FormGroup;
-    
+    // define un formulario de Consumos
+    public formularioConsumo: FormGroup;
     //constructor
     constructor() {
         // crear el formulario para la seccion de modulos
@@ -23,7 +24,14 @@ export class Venta {
             importeAbona: new FormControl(),
             importeTotal: new FormControl(),
             consumos: new FormControl()
+        });
+        this.formularioConsumo = new FormGroup({
+            importe: new FormControl(),
+            cantidad: new FormControl(),
+            concepto: new FormControl(),
+            mes: new FormControl(),
+            anio: new FormControl(),
+          });
 
-        })
     }
 }

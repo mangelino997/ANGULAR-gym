@@ -11,6 +11,8 @@ import { LesionService } from 'src/app/servicios/lesion.service';
 import { GrupoMuscularService } from 'src/app/servicios/grupo-muscular.service';
 import { GrupoMaquinaService } from 'src/app/servicios/grupo-maquina.service';
 import { GrupoGeneralService } from 'src/app/servicios/grupo-general.service';
+import { AppService } from 'src/app/servicios/app.service';
+import { ImagenService } from 'src/app/servicios/imagen.service';
 @Component({
   selector: 'app-ejercicio',
   templateUrl: './ejercicio.component.html',
@@ -71,6 +73,8 @@ export class EjercicioComponent implements OnInit {
   public fotoCliente: number;
   //id de la foto del cliente para mostrarla en Consultar, Actualizar y Eliminar
   public idFoto: number=1;
+  //Define la ip 
+  public ip: any;
 
   bandera: boolean= false;
 
@@ -78,7 +82,7 @@ export class EjercicioComponent implements OnInit {
   @ViewChild('inputAutorizado') inputLesiones: ElementRef;
   
   //declaramos en el constructor las clases de las cuales usaremos sus servicios/metodos
-  constructor(private grupoGeneralService: GrupoGeneralService ,private grupoMaquinaService: GrupoMaquinaService, private grupoMuscularService: GrupoMuscularService, private lesionService: LesionService,private foto:Foto, private fotoService: FotoService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
+  constructor(private appService: AppService ,private grupoGeneralService: GrupoGeneralService ,private grupoMaquinaService: GrupoMaquinaService, private grupoMuscularService: GrupoMuscularService, private lesionService: LesionService, private fotoService: ImagenService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.ejercicioService.listarPorNombre(data).subscribe(res => {
@@ -129,6 +133,8 @@ export class EjercicioComponent implements OnInit {
     this.listar();
     // inicializa en false
     this.muestraImagenPc=true;
+    //Setea la ip
+    this.ip= this.appService.URL_BASE;
   }
 
   //Establece el formulario al seleccionar elemento del autocompletado
@@ -251,7 +257,7 @@ public accion(indice) {
       let foto = { 
         id: id
       }
-      this.formulario.get('idImagen').setValue(foto.id);
+      this.formulario.get('idImagen').setValue(id);
       //obtiene el array de autorizados agregados y los guarda en el campo 'autorizados' del formulario
       this.formulario.get('lesiones').setValue(this.listaLesionesAgregadasId);
       this.formulario.get('idGrupoGeneral').setValue(1);

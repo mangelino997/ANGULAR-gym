@@ -142,11 +142,10 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.profesorService.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
         this.formulario.get('id').setValue(res.json());
       },
       err => {
-        console.log(err);
+        this.toastr.error("No se puede obtener el próximo ID");
       }
     );
   }
@@ -157,13 +156,12 @@ public accion(indice) {
         this.listaCompleta=res.json();
       },
       err => {
-        console.log(err);
+        this.toastr.error("No se puede obtener la lista completa");
       }
     );
   }
   //Agrega un registro 
   private agregar(){
-    console.log(this.formulario);
     this.profesorService.agregar(this.formulario.value).subscribe(
       res => {
         var respuesta = res.json();
@@ -212,13 +210,25 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.profesorService.agregar(this.formulario.get('id').value).subscribe(
+    this.profesorService.eliminar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
+        var respuesta = res.json();
+        if(respuesta.codigo == 200) {
+          this.reestablecerFormulario(undefined);
+          setTimeout(function() {
+            document.getElementById('idAutocompletado').focus();
+          }, 20);
+          this.toastr.success(respuesta.mensaje);
+        }
       },
       err => {
-        console.log(err);
-      }
+        var respuesta = err.json();
+        if(respuesta.codigo == 11002) {
+          document.getElementById("labelNombre").classList.add('label-error');
+          document.getElementById("idNombre").classList.add('is-invalid');
+          document.getElementById("idNombre").focus();
+          this.toastr.error(respuesta.mensaje);
+        }      }
     );
   }
   //Reestablece los campos formularios
