@@ -50,6 +50,13 @@ export class SubopcionComponent implements OnInit {
         })
       }
     });
+    
+   }
+
+  ngOnInit() {
+    //inicializa el formulario y sus campos desde la clase Modulo.
+    this.formulario= this.subopcion.formulario;
+
     this.formulario.get('modulo').valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.moduloServicio.listarPorNombre(data).subscribe(res => {
@@ -57,11 +64,6 @@ export class SubopcionComponent implements OnInit {
         })
       }
     });
-   }
-
-  ngOnInit() {
-    //inicializa el formulario y sus campos desde la clase Modulo.
-    this.formulario= this.subopcion.formulario;
     
     //Carga desde un principio las pestañas "Agregar, Consultar, Actualizar y listar"
     this.subopcionPestaniaServicio.listarPestaniasPorSubopcion(1).subscribe(

@@ -15,7 +15,7 @@ import { VentaComponent } from './componentes/venta/venta.component';
 import { RolComponent } from './componentes/rol/rol.component';
 
 const routes: Routes = [
-  {path: '', component: ActividadComponent}
+  {path: '', component: SubopcionComponent}
 ];
 
 @NgModule({

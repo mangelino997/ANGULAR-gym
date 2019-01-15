@@ -9,6 +9,7 @@ import { Socio } from 'src/app/modelos/socio';
 import { SocioService } from 'src/app/servicios/socio.service';
 import { Foto } from 'src/app/modelos/foto';
 import { FotoService } from 'src/app/servicios/foto.service';
+import { AppService } from 'src/app/servicios/app.service';
 @Component({
   selector: 'app-socio',
   templateUrl: './socio.component.html',
@@ -35,6 +36,8 @@ export class SocioComponent implements OnInit {
   public lesiones: FormControl=new FormControl();
   //Define la pestania actual seleccionada
   public pestaniaActual:string = null;
+  //Define la URL BASE
+  public urlBase:string = null;
   //Define la pestania actual seleccionada
   public lesionElegida:Array<any> = [];
   
@@ -73,7 +76,7 @@ export class SocioComponent implements OnInit {
 
   
   //declaramos en el constructor las clases de las cuales usaremos sus servicios/metodos
-  constructor(  private socioService: SocioService, private foto:Foto, private fotoService: FotoService ,private socio: Socio  ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
+  constructor(private appService: AppService ,private socioService: SocioService, private foto:Foto, private fotoService: FotoService ,private socio: Socio  ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.socioService.listarPorAlias(data).subscribe(res => {
@@ -101,6 +104,8 @@ export class SocioComponent implements OnInit {
     this.listar();
     // inicializa en false
     this.muestraImagenPc=true;
+    //Carga la URL BASE
+    this.urlBase= this.appService.URL_BASE;
   }
 
   //Establece el formulario al seleccionar elemento del autocompletado
