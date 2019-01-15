@@ -19,8 +19,8 @@
             <div class="form-group has-float-label ">
               <label for="idSocio" class="labelSocio">Socio</label>
               <input id="idSocio" class="form-control form-control-sm color-busqueda"
-                type="text" matInput [formControl]="formulario.get('socio')" [matAutocomplete]="auto" autocomplete="off" (optionSelected)="cambioAutocompletadoSocio()">
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                type="text" matInput [formControl]="formulario.get('socio')" [matAutocomplete]="auto" autocomplete="off" >
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)" (optionSelected)="cambioAutocompletadoSocio()">
                 <mat-option *ngFor="let socio of resultadoSocio" [value]="socio" > <!--(onSelectionChange)="cambioAutocompletadoSocio(socio)"-->
                   {{socio.alias}}
                 </mat-option>
@@ -31,8 +31,8 @@
             <div class="form-group ">
               <div class="form-group has-float-label">
                   <label for="idConcepto" class="tamanio-label">Concepto</label>
-                  <mat-select class="form-control form-control-sm" id="idConcepto" [formControl]="formularioConsumo.get('concepto')" [compareWith]="compareFn">
-                      <mat-option *ngFor="let concepto of listaConcepto" [value]="concepto" (click)="cambioAutocompletadoConcepto(concepto)">
+                  <mat-select class="form-control form-control-sm" id="idConcepto" [formControl]="formularioConsumo.get('concepto')" [compareWith]="compareFn" (selectionChange)="cambioAutocompletadoConcepto()">
+                      <mat-option *ngFor="let concepto of listaConcepto" [value]="concepto" >
                         {{concepto.nombre }}
                       </mat-option>
                   </mat-select>
@@ -110,7 +110,7 @@
                           <span>{{nombreDelSocio}}</span>
                         </td>
                         <td class="td-edicion-tabla">
-                            <span>{{a.concepto}}</span>
+                            <span>{{a.concepto.nombre}}</span>
                         </td>
                         <td class="td-edicion-tabla" *ngIf="a.cantidad!=0; else mostrarMes">
                             <span>{{a.cantidad}}</span>

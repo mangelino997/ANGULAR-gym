@@ -108,7 +108,8 @@ export class VentaComponent implements OnInit {
   }
   //Manejo de cambio de autocompletado de tipo formulario
   public cambioAutocompletadoSocio(elemento) {
-    this.formulario.get('idSocio').setValue(elemento.id);
+    var elemento=this.formulario.get('socio').value;
+    this.formulario.get('socio').setValue(elemento.id);
     this.nombreDelSocio=elemento.nombre;
     this.socioService.esDeudor(elemento.id).subscribe(res=>{
       let respuesta= res.json();
@@ -118,25 +119,29 @@ export class VentaComponent implements OnInit {
     })
   }
   //Maneja el cambio de tipo de concepto
-  public cambioAutocompletadoConcepto(elemento) {
+  public cambioAutocompletadoConcepto() {
+    console.log(this.formularioConsumo.get('concepto').value);
+    var elemento= this.formularioConsumo.get('concepto').value;
+    //this.formularioConsumo.get('concepto').setValue(elemento.id);
     this.importeDelConcepto=0;
     this.nombreDelConcepto="";
     this.mostrarMesAPagar=null;
-    this.formulario.get('idConcepto').setValue(elemento.id);
     if(elemento.id==1){
       this.mostrarMesAPagar=true;
-      //valores de prueba
+      /*valores de prueba
       let importe=500;
       this.formularioConsumo.get('concepto').setValue(elemento.nombre);
       this.formularioConsumo.get('importe').setValue(importe);
       this.importe.setValue(importe);
+      */
       //Valores posta
-      // this.socioService.obtenerImporteYEsDeudor(this.formulario.get('idSocio').value).subscribe(res=>{
-      //   let respuesta= res.json();
-      //   console.log(respuesta);
-      //   this.formularioConsumo.get('concepto').setValue(elemento.nombre);
-      //   this.formularioConsumo.get('importe').setValue(importe);
-      // });
+        this.socioService.obtenerImporteYEsDeudor(this.formulario.get('socio').value).subscribe(res=>{
+         let respuesta= res.json();
+         console.log(respuesta);
+         this.formularioConsumo.get('concepto').setValue(elemento.nombre);
+         this.formularioConsumo.get('importe').setValue(respuesta.importe);
+
+      });
     }else{
       this.mostrarMesAPagar=false;
       this.importeDelConcepto=elemento.importe;
@@ -147,11 +152,9 @@ export class VentaComponent implements OnInit {
   //Calcular Importe cuando el concepto sea != 1 || diferente de "cuota"
   public calcularImporteSiNoEsCuota(){
     //seteo como que si es deudor para probarlo
-    let importe=this.cantidad.value*this.importeDelConcepto;
-    this.importe.setValue(importe);
-    this.formularioConsumo.get('cantidad').setValue(this.cantidad.value);        
-    this.formularioConsumo.get('importe').setValue(this.importe.value);     
-    this.formularioConsumo.get('concepto').setValue(this.nombreDelConcepto);   
+    console.log(this.formularioConsumo.value);
+    let importe=this.formularioConsumo.get('cantidad').value*this.importeDelConcepto;
+    this.formularioConsumo.get('importe').setValue(importe);  
     }
   //Formatea el valor del autocompletado
   public displayFn(elemento) {
@@ -174,17 +177,13 @@ export class VentaComponent implements OnInit {
   }
   //Agrega una fila a la  tabla
   public agregarElemento() {
-    this.formularioConsumo.get('mes').setValue(this.formulario.get('mes').value);
-    this.formularioConsumo.get('anio').setValue(this.formulario.get('anio').value);
+    console.log(this.formularioConsumo.value);
     this.listaAgregar.push(this.formularioConsumo.value);
-    let monto=<number>this.formularioConsumo.get('importe').value;
-    let montoTotal= <number>this.formulario.get('importeTotal').value;
-    let importeTotal: number= montoTotal + monto;
+    let importeTotal: number= <number>this.formulario.get('importeTotal').value + <number>this.formularioConsumo.get('importe').value;
     this.formulario.get('importeTotal').setValue(importeTotal);
     document.getElementById('idSocio').focus();
-    this.autocompletado.disable();
+    this.formulario.get('socio').disable();
     this.reestablecerFormulario();
-
   }
   //Elimina una fila de la segunda tabla
   public eliminarElemento(indice, montoRestar) {
@@ -192,49 +191,50 @@ export class VentaComponent implements OnInit {
     this.formulario.get('importeTotal').setValue(montoTotal-montoRestar);
     this.listaAgregar.splice(indice, 1); 
     if(this.listaAgregar.length==0){
-      this.autocompletado.enable();
+      this.formulario.get('socio').enable();
       this.autocompletado.reset();
     }
     else{
-      this.autocompletado.disable();
+      this.formulario.get('socio').disable();
     }
   }
   //Agrega un registro 
 public agregar(){
   this.formulario.get('consumos').setValue(this.listaAgregar);// Agrego el array de consumos agregados a la lista
   console.log(this.formulario.value);
-  // this.ventaService.agregar(this.formulario.value).subscribe(
-  //   res => {
-  //     var respuesta = res.json();
-  //     if(respuesta.codigo == 201) {
-  //       this.autocompletado.reset();
-  //       this.listaAgregar = [];
-  //       this.reestablecerFormulario();
-  //       this.formulario.reset();
-  //       setTimeout(function() {
-  //         document.getElementById('idSocio').focus();
-  //       }, 20);
-  //       this.toastr.success(respuesta.mensaje);
-  //     }
-  //   },
-  //   err => {
-  //     var respuesta = err.json();
-  //     if(respuesta.codigo == 11002) {
-  //       document.getElementById("idSocio").focus();
-  //       this.toastr.error(respuesta.mensaje);
-  //     }
-  //   }
-  // );
+  this.ventaService.agregar(this.formulario.value).subscribe(
+   res => {
+       var respuesta = res.json();
+       if(respuesta.codigo == 201) {
+         this.autocompletado.reset();
+         this.listaAgregar = [];
+         this.reestablecerFormulario();
+         this.formulario.reset();
+         setTimeout(function() {
+           document.getElementById('idSocio').focus();
+         }, 20);
+         this.toastr.success(respuesta.mensaje);
+       }
+     },
+     err => {
+       var respuesta = err.json();
+       if(respuesta.codigo == 11002) {
+         document.getElementById("idSocio").focus();
+         this.toastr.error(respuesta.mensaje);
+       }
+     }
+   );
 }
 //Reestablece los campos formularios
 private reestablecerFormulario() {
+  /*
   this.cantidad.reset();
   this.importe.reset();
   this.cantidad.setValue(0);
   this.concepto.reset();
-  this.formulario.get('mes').reset();
-  this.formulario.get('anio').reset();
   this.importeDelConcepto=0;
   this.nombreDelConcepto="";
+  */
+  this.formularioConsumo.reset();
   }
 }
