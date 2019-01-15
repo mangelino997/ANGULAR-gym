@@ -86,6 +86,6 @@ export class VentaService {
   }
   //eliminar un registro
   public eliminar(idRegistro) {
-    return this.http.delete(this.url, idRegistro);
+    return this.http.delete(this.url+'/'+ idRegistro);
   }
 }

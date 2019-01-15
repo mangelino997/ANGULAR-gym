@@ -1,0 +1,10 @@
+<mat-toolbar class="toolbar-height">
+  <div class="centrar" *ngFor="let modulo of menu">
+    <button mat-menu-item [matMenuTriggerFor]="lmodulo">{{modulo.modulo}}</button>
+    <mat-menu #lmodulo="matMenu">
+      <div *ngFor="let subopcion of modulo.subopciones">
+        <button mat-menu-item (click)="navegar(modulo, subopcion)">{{subopcion.subopcion}}</button>
+      </div>
+    </mat-menu>
+  </div>
+</mat-toolbar>

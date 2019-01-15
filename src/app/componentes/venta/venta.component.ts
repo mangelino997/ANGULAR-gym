@@ -73,7 +73,6 @@ export class VentaComponent implements OnInit {
       if(typeof data == 'string') {
         this.socioService.listarPorAlias(data).subscribe(response =>{
           this.resultadoSocio = response.json();
-          console.log(this.resultadoSocio);
         })
       }
     })
@@ -91,13 +90,15 @@ export class VentaComponent implements OnInit {
     this.formulario= this.venta.formulario;
     this.formulario.get('fecha').setValue(dateDay);
     //define el formulario de Consumos que es de tipo array (puede tener varias filas)
+    this.formularioConsumo= this.venta.formularioConsumo;
+    /*
     this.formularioConsumo = this.formBuilder.group({
       importe: '',
       cantidad: '',
       concepto: '',
       mes: '',
       anio: ''
-    });
+    });*/
     //inicializa el select de concepto
     this.listarConcepto();
   }
@@ -106,10 +107,9 @@ export class VentaComponent implements OnInit {
     this.conceptoService.listar().subscribe(
       res => {
         this.listaConcepto=res.json();
-        console.log(this.listaConcepto);
       },
       err => {
-        console.log(err);
+        this.toastr.error("No se pueden listar los Conceptos");
       }
     );
   }
@@ -117,10 +117,8 @@ export class VentaComponent implements OnInit {
   public cambioAutocompletadoSocio(elemento) {
     this.formulario.get('idSocio').setValue(elemento.id);
     this.nombreDelSocio=elemento.nombre;
-    console.log(this.formularioConsumo);
     this.socioService.esDeudor(elemento.id).subscribe(res=>{
       let respuesta= res.json();
-      console.log(respuesta);
       if(respuesta== true){
         this.toastr.error("El Socio es Deudor!");
       }
@@ -132,7 +130,6 @@ export class VentaComponent implements OnInit {
     this.nombreDelConcepto="";
     this.mostrarMesAPagar=null;
     this.formulario.get('idConcepto').setValue(elemento.id);
-    console.log(this.formulario.get('idSocio').value);
     if(elemento.id==1){
       this.mostrarMesAPagar=true;
       //valores de prueba
@@ -140,7 +137,6 @@ export class VentaComponent implements OnInit {
       this.formularioConsumo.get('concepto').setValue(elemento.nombre);
       this.formularioConsumo.get('importe').setValue(importe);
       this.importe.setValue(importe);
-      console.log(this.formulario.value);
       //Valores posta
       // this.socioService.obtenerImporteYEsDeudor(this.formulario.get('idSocio').value).subscribe(res=>{
       //   let respuesta= res.json();

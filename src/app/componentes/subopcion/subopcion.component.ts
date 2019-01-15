@@ -50,20 +50,11 @@ export class SubopcionComponent implements OnInit {
         })
       }
     });
-    
    }
 
   ngOnInit() {
     //inicializa el formulario y sus campos desde la clase Modulo.
     this.formulario= this.subopcion.formulario;
-
-    this.formulario.get('modulo').valueChanges.subscribe(data => {
-      if(typeof data == 'string') {
-        this.moduloServicio.listarPorNombre(data).subscribe(res => {
-          this.modulosResultados = res.json();
-        })
-      }
-    });
     
     //Carga desde un principio las pestañas "Agregar, Consultar, Actualizar y listar"
     this.subopcionPestaniaServicio.listarPestaniasPorSubopcion(1).subscribe(
@@ -78,6 +69,14 @@ export class SubopcionComponent implements OnInit {
     this.listarModulos();
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
+    //Evento del autocompletado para modulo
+    this.formulario.get('modulo').valueChanges.subscribe(data => {
+      if(typeof data == 'string') {
+        this.moduloServicio.listarPorNombre(data).subscribe(res => {
+          this.modulosResultados = res.json();
+        })
+      }
+    });
     
   }
 
@@ -237,11 +236,25 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.subopcionServicio.agregar(this.formulario.get('id').value).subscribe(
+    this.subopcionServicio.eliminar(this.formulario.get('id').value).subscribe(
       res => {
+        var respuesta = res.json();
+        if(respuesta.codigo == 200) {
+          this.reestablecerFormulario(undefined);
+          setTimeout(function() {
+            document.getElementById('idAutocompletado').focus();
+          }, 20);
+          this.toastr.success(respuesta.mensaje);}
       },
       err => {
+        var respuesta = err.json();
+        if(respuesta.codigo == 11002) {
+          document.getElementById("labelNombre").classList.add('label-error');
+          document.getElementById("idNombre").classList.add('is-invalid');
+          document.getElementById("idNombre").focus();
+          this.toastr.error(respuesta.mensaje);
       }
+    }
     );
   }
   //Reestablece los campos formularios

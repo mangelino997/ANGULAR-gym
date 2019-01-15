@@ -11,6 +11,8 @@ import { LesionService } from 'src/app/servicios/lesion.service';
 import { GrupoMuscularService } from 'src/app/servicios/grupo-muscular.service';
 import { GrupoMaquinaService } from 'src/app/servicios/grupo-maquina.service';
 import { GrupoGeneralService } from 'src/app/servicios/grupo-general.service';
+import { AppService } from 'src/app/servicios/app.service';
+import { ImagenService } from 'src/app/servicios/imagen.service';
 @Component({
   selector: 'app-ejercicio',
   templateUrl: './ejercicio.component.html',
@@ -33,6 +35,8 @@ export class EjercicioComponent implements OnInit {
   public activeLink: any;
   // define el autocompletado como un formControl
   public autocompletado: FormControl=new FormControl();
+  // define el id como un formControl
+  public id: FormControl=new FormControl();
   // define el autocompletado de Lesiones como un formControl
   public lesiones: FormControl=new FormControl();
   //Define la pestania actual seleccionada
@@ -69,6 +73,8 @@ export class EjercicioComponent implements OnInit {
   public fotoCliente: number;
   //id de la foto del cliente para mostrarla en Consultar, Actualizar y Eliminar
   public idFoto: number=1;
+  //Define la ip 
+  public ip: any;
 
   bandera: boolean= false;
 
@@ -76,7 +82,7 @@ export class EjercicioComponent implements OnInit {
   @ViewChild('inputAutorizado') inputLesiones: ElementRef;
   
   //declaramos en el constructor las clases de las cuales usaremos sus servicios/metodos
-  constructor(private grupoGeneralService: GrupoGeneralService ,private grupoMaquinaService: GrupoMaquinaService, private grupoMuscularService: GrupoMuscularService, private lesionService: LesionService,private foto:Foto, private fotoService: FotoService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
+  constructor(private appService: AppService ,private grupoGeneralService: GrupoGeneralService ,private grupoMaquinaService: GrupoMaquinaService, private grupoMuscularService: GrupoMuscularService, private lesionService: LesionService, private fotoService: ImagenService ,private ejercicio: Ejercicio ,private ejercicioService: EjercicioService ,private subopcionPestaniaServicio: SubopcionPestaniaService, private toastr: ToastrService) {
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.ejercicioService.listarPorNombre(data).subscribe(res => {
@@ -127,6 +133,8 @@ export class EjercicioComponent implements OnInit {
     this.listar();
     // inicializa en false
     this.muestraImagenPc=true;
+    //Setea la ip
+    this.ip= this.appService.URL_BASE;
   }
 
   //Establece el formulario al seleccionar elemento del autocompletado
@@ -145,11 +153,21 @@ export class EjercicioComponent implements OnInit {
     }
   }
   //Funcion para establecer los valores de las pestañas
-  private establecerValoresPestania(nombrePestania, autocompletado, soloLectura, boton, componente) {
+  private establecerValoresPestania(nombrePestania, autocompletado, soloLectura, boton, deshabilitar, componente) {
     this.pestaniaActual = nombrePestania;
     this.mostrarAutocompletado = autocompletado;
     this.soloLectura = soloLectura;
     this.mostrarBoton = boton;
+    if(deshabilitar){
+      this.formulario.get('idGrupoGeneral').disable();
+      this.formulario.get('idGrupoMuscular').disable();
+      this.formulario.get('idGrupoMaquina').disable();
+    }
+    else {
+      this.formulario.get('idGrupoGeneral').enable();
+      this.formulario.get('idGrupoMuscular').enable();
+      this.formulario.get('idGrupoMaquina').enable();
+    }
     setTimeout(function () {
       document.getElementById(componente).focus();
     }, 20);
@@ -173,21 +191,21 @@ export class EjercicioComponent implements OnInit {
   switch (id) {
     case 1:
       this.obtenerSiguienteId();
-      this.establecerValoresPestania(nombre, false, false, true, 'idNombre');
+      this.establecerValoresPestania(nombre, false, false, true, false, 'idNombre');
       break;
     case 2:
       this.mostrarFotoCliente(this.idFoto);
-      this.establecerValoresPestania(nombre, true, true, false, 'idAutocompletado');
+      this.establecerValoresPestania(nombre, true, true, false, true, 'idAutocompletado');
       this.muestraImagenPc=false;
       break;
     case 3:
       this.mostrarFotoCliente(this.idFoto);
-      this.establecerValoresPestania(nombre, true, false, true, 'idAutocompletado');
+      this.establecerValoresPestania(nombre, true, false, true, false, 'idAutocompletado');
       this.muestraImagenPc=false;
       break;
     case 4:
       this.mostrarFotoCliente(this.idFoto);
-      this.establecerValoresPestania(nombre, true, true, true, 'idAutocompletado');
+      this.establecerValoresPestania(nombre, true, true, true, true, 'idAutocompletado');
       this.muestraImagenPc=false;
       break;
     default:
@@ -214,11 +232,10 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.ejercicioService.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
-        this.formulario.get('id').setValue(res.json());
+        this.id.setValue(res.json());
       },
       err => {
-        console.log(err);
+        this.toastr.error("No se puede obtener el siguiente id");
       }
     );
   }
@@ -229,7 +246,6 @@ public accion(indice) {
         this.listaCompleta=res.json();
       },
       err => {
-        console.log(err);
       }
     );
   }
@@ -241,8 +257,7 @@ public accion(indice) {
       let foto = { 
         id: id
       }
-      console.log(respuesta);
-      this.formulario.get('idImagen').setValue(foto.id);
+      this.formulario.get('idImagen').setValue(id);
       //obtiene el array de autorizados agregados y los guarda en el campo 'autorizados' del formulario
       this.formulario.get('lesiones').setValue(this.listaLesionesAgregadasId);
       this.formulario.get('idGrupoGeneral').setValue(1);
@@ -335,12 +350,25 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.ejercicioService.agregar(this.formulario.get('id').value).subscribe(
+    this.ejercicioService.eliminar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
+        var respuesta = res.json();
+        if(respuesta.codigo == 200) {
+          this.reestablecerFormulario(undefined);
+          setTimeout(function() {
+            document.getElementById('idAutocompletado').focus();
+          }, 20);
+          this.toastr.success(respuesta.mensaje);
+        }
       },
       err => {
-        console.log(err);
+        var respuesta = err.json();
+        if(respuesta.codigo == 11002) {
+          document.getElementById("labelNombre").classList.add('label-error');
+          document.getElementById("idNombre").classList.add('is-invalid');
+          document.getElementById("idNombre").focus();
+          this.toastr.error(respuesta.mensaje);
+        }
       }
     );
   }
@@ -349,10 +377,9 @@ public accion(indice) {
     this.grupoGeneralService.listar().subscribe(
       res => {
         this.listaGrupoGenerales=res.json();
-        console.log(this.listaGrupoGenerales);
       },
       err => {
-        console.log(err);
+        this.toastr.error("No existen Grupos Generales agregados");
       }
     );
   }
@@ -360,10 +387,9 @@ public accion(indice) {
     this.grupoMuscularService.listar().subscribe(
       res => {
         this.listaGrupoMusculares=res.json();
-        console.log(this.listaGrupoMusculares);
       },
       err => {
-        console.log(err);
+        this.toastr.error("No existen Grupos Musculares agregados");
       }
     );
   }
@@ -371,10 +397,9 @@ public accion(indice) {
     this.grupoMaquinaService.listar().subscribe(
       res => {
         this.listaGrupoMaquinas=res.json();
-        console.log(this.listaGrupoMaquinas);
       },
       err => {
-        console.log(err);
+        this.toastr.error("No existen Grupos Maquinas agregados");
       }
     );
   }
@@ -397,9 +422,6 @@ public accion(indice) {
   }
   // elimina un autorizado seleccionado de la lista
   public  deleteLesion(lesion) {
-    console.log(this.listaLesionesAgregadas);
-    console.log(this.listaLesionesAgregadasId);
-    console.log(this.lesionElegida);
       for(let i=0; i< this.listaLesionesAgregadas.length; i++ ){
           if(lesion==this.listaLesionesAgregadas[i]){
             this.listaLesionesAgregadas.splice(i, 1);
@@ -418,7 +440,6 @@ public accion(indice) {
     reader.onload = this.fileOnload;
     reader.readAsDataURL(this.archivo);
 
-    console.log(e);
     console.log('imagen adjuntada');
     this.bandera=true;
   }

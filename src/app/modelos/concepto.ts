@@ -11,10 +11,9 @@ export class Concepto {
             id: new FormControl(),
             version: new FormControl(),
             nombre: new FormControl('', [Validators.required, Validators.maxLength(20)]),
-            alias: new FormControl('', Validators.maxLength(30)),
             importe: new FormControl('', Validators.required),
-            idUsuarioAlta: new FormControl('', Validators.required),
-            idUsuarioMod: new FormControl('', Validators.required)
+            usuarioAlta: new FormControl('', Validators.required),
+            usuarioMod: new FormControl()
         })
     }
 }

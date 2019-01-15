@@ -41,7 +41,7 @@ export class FotoService {
   }
   //eliminar un registro
   public eliminar(idRegistro) {
-    return this.http.delete(this.url, idRegistro);
+    return this.http.delete(this.url+'/'+ idRegistro);
   }
   //cargar imagenes
   public postFileImagen(imagenParaSubir: File){

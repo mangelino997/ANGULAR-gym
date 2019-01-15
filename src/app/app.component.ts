@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ModuloService } from './servicios/modulo.service';
 import { Router } from '@angular/router';
+import { AppService } from './servicios/app.service';
 
 
 @Component({
@@ -14,13 +15,14 @@ export class AppComponent {
   public usuario: any;
   public menu: Array<any>;
   public subopcion: any;
+  public ip: any;
 
-  constructor(private moduloServicio: ModuloService, private router: Router) {
-    this.listarMenu();
+  constructor(private moduloServicio: ModuloService, private router: Router, private appService: AppService) {
     //Se subscribe al servicio de lista de registros
     // this.appService.listaCompleta.subscribe(res => {
     //   this.obtenerMenu();
     // });
+    this.ip= this.appService.URL_BASE;
   }
   
   public setVisible(valor) {
@@ -42,18 +44,6 @@ export class AppComponent {
   //Establece la subopcion
   public setSubopcion(subopcion) {
     this.subopcion = subopcion;
-  }
-  //Obtiene la lista de modulos para armar el menu
-  public listarMenu() {
-    this.moduloServicio.listarMenu(1).subscribe(
-      res => {
-        this.menu = res.json();
-        console.log(this.menu.values);
-      },
-      err => {
-        console.log(err);
-      }
-    );  
   }
   //Define la navegación en el menu
   public navegar(modulo, subopcion) {

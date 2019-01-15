@@ -221,10 +221,25 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.usuarioServicio.agregar(this.formulario.get('id').value).subscribe(
+    this.usuarioServicio.eliminar(this.formulario.get('id').value).subscribe(
       res => {
+        var respuesta = res.json();
+        if(respuesta.codigo == 200) {
+          this.reestablecerFormulario(undefined);
+          setTimeout(function() {
+            document.getElementById('idAutocompletado').focus();
+          }, 20);
+          this.toastr.success(respuesta.mensaje);
+        }
       },
       err => {
+        var respuesta = err.json();
+        if(respuesta.codigo == 11002) {
+          document.getElementById("labelNombre").classList.add('label-error');
+          document.getElementById("idNombre").classList.add('is-invalid');
+          document.getElementById("idNombre").focus();
+          this.toastr.error(respuesta.mensaje);
+        }
       }
     );
   }

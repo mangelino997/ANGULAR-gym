@@ -58,7 +58,7 @@ export class LesionComponent implements OnInit {
       }
     );
     //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(1, 'Agregar', 0);
+    this.seleccionarPestania(5, 'Agregar', 0);
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
     this.listar();
   }
@@ -136,11 +136,10 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.lesionService.obtenerSiguienteId().subscribe(
       res => {
-        console.log(res);
         this.formulario.get('id').setValue(res.json());
       },
       err => {
-        console.log(err);
+        this.toastr.error("No se puede obtener el próximo ID");
       }
     );
   }
@@ -151,7 +150,7 @@ public accion(indice) {
         this.listaCompleta=res.json();
       },
       err => {
-        console.log(err);
+        this.toastr.error("No se puede obtener la lista completa");
       }
     );
   }
@@ -205,12 +204,25 @@ public accion(indice) {
   }
   //Elimina un registro
   private eliminar(){
-    this.lesionService.agregar(this.formulario.get('id').value).subscribe(
+    this.lesionService.eliminar(this.formulario.get('id').value).subscribe(
       res => {
-        console.log(res);
+        var respuesta = res.json();
+        if(respuesta.codigo == 200) {
+          this.reestablecerFormulario(undefined);
+          setTimeout(function() {
+            document.getElementById('idAutocompletado').focus();
+          }, 20);
+          this.toastr.success(respuesta.mensaje);
+        }
       },
       err => {
-        console.log(err);
+        var respuesta = err.json();
+        if(respuesta.codigo == 11002) {
+          document.getElementById("labelNombre").classList.add('label-error');
+          document.getElementById("idNombre").classList.add('is-invalid');
+          document.getElementById("idNombre").focus();
+          this.toastr.error(respuesta.mensaje);
+        }
       }
     );
   }

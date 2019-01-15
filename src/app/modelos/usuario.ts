@@ -9,6 +9,7 @@ export class Usuario {
         // crear el formulario para la seccion de modulos
         this.formulario = new FormGroup({
             id: new FormControl(),
+            version: new FormControl(),
             nombre: new FormControl('', [Validators.required, Validators.maxLength(30)]),
             apellido: new FormControl('', [Validators.required, Validators.maxLength(20)]),
             username: new FormControl('', [Validators.required, Validators.maxLength(20)]),
