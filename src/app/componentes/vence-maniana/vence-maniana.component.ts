@@ -10,7 +10,7 @@ import { AppService } from 'src/app/servicios/app.service';
 })
 export class VenceManianaComponent implements OnInit {
 //Define la lista completa de registros
-public listaCompleta:Array<any> = [];
+public list:Array<any> = [];
 //Define la ip 
 public ip: any;
 //id de la foto del cliente para mostrarla en Consultar, Actualizar y Eliminar
@@ -21,17 +21,15 @@ constructor(private toastr: ToastrService, private socioService: SocioService, p
  }
 
 ngOnInit() {
-  this.socioService.listarVencidosManana().subscribe(data => {
-    if(typeof data == 'string') {
-      this.socioService.listarPorAlias(data).subscribe(response =>{
-        this.listaCompleta = response.json();
-        console.log(this.listaCompleta);
-      })
-    }
-  });
-  // seteamos la Ip global
+  // Listar los vencidos mañana
+  this.listExpired();
+  // Seteamos la Ip global
   this.ip= this.appService.URL_BASE;
 }
-
+public listExpired(){
+  this.socioService.listarVencidosManana().subscribe(data => {
+        this.list = data.json();
+  })
+  }
 }
 

@@ -14,9 +14,10 @@ import { SocioComponent } from './componentes/socio/socio.component';
 import { VentaComponent } from './componentes/venta/venta.component';
 import { RolComponent } from './componentes/rol/rol.component';
 import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
+import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
 
 const routes: Routes = [
-  {path: '', component: CumpleaniosComponent}
+  {path: '', component: VenceHoyComponent}
 ];
 
 @NgModule({

@@ -28,7 +28,6 @@ export class CumpleaniosComponent implements OnInit {
   public listBirthday(){
     this.socioService.listarCumpleanieros().subscribe(data => {
           this.list = data.json();
-          console.log(this.list.length);
     })
   }
 

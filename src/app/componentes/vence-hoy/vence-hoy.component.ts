@@ -10,7 +10,7 @@ import { AppService } from 'src/app/servicios/app.service';
 })
 export class VenceHoyComponent implements OnInit {
   //Define la lista completa de registros
-  public listaCompleta:Array<any> = [];
+  public list:Array<any> = [];
   //Define la ip 
   public ip: any;
   //id de la foto del cliente para mostrarla en Consultar, Actualizar y Eliminar
@@ -21,16 +21,15 @@ export class VenceHoyComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.socioService.listarVencidosHoy().subscribe(data => {
-      if(typeof data == 'string') {
-        this.socioService.listarPorAlias(data).subscribe(response =>{
-          this.listaCompleta = response.json();
-          console.log(this.listaCompleta);
-        })
-      }
-    });
+    //Obtenemos todos los vencidos al dia de la fecha 
+    this.listExpiredToDay();
     // seteamos la Ip global
     this.ip= this.appService.URL_BASE;
+  }
+  public listExpiredToDay(){
+    this.socioService.listarVencidosHoy().subscribe(data => {
+          this.list = data.json();
+    })
   }
 
 }
