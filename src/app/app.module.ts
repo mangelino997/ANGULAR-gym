@@ -73,6 +73,7 @@ import { Socio } from './modelos/socio';
 import { Venta } from './modelos/venta';
 import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
 import { VenceManianaComponent } from './componentes/vence-maniana/vence-maniana.component';
+import { VencidosComponent } from './componentes/vencidos/vencidos.component';
 
 
 @NgModule({
@@ -100,7 +101,8 @@ import { VenceManianaComponent } from './componentes/vence-maniana/vence-maniana
     FooterComponent,
     ToolbarMenuComponent,
     VenceHoyComponent,
-    VenceManianaComponent
+    VenceManianaComponent,
+    VencidosComponent
   ],
   imports: [
     BrowserModule,

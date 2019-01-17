@@ -53,19 +53,19 @@ export class SocioService {
   }
   //obtiene la lista completa de registros
   public listarVencidosHoy() {
-    return this.http.get(this.url + '/listarVencidosHoy');
+    return this.http.get(this.url+'/listarVencidosHoy');
   }
   //obtiene la lista completa de registros
   public listarVencidosManana() {
-    return this.http.get(this.url + '/listarVencidosManana');
+    return this.http.get(this.url+'/listarVencidosManana');
   }
   //obtiene la lista completa de registros
   public listarTodosVencidos() {
-    return this.http.get(this.url + '/listarTodosVencidos');
+    return this.http.get(this.url+'/listarTodosVencidos');
   }
   //obtiene la lista completa de registros
   public listarCumpleanieros() {
-    return this.http.get(this.url + '/listarCumpleanieros');
+    return this.http.get(this.url+'/listarCumpleanieros');
   }
   //agrega un registro
   public agregar(elemento) {

@@ -15,7 +15,9 @@ export class Venta {
             usuarioAlta: new FormControl(),
             importeAbona: new FormControl(),
             importeTotal: new FormControl(),
-            consumos: new FormControl()
+            consumos: new FormControl(),
+            anio: new FormControl(),
+
         });
         this.formularioConsumo = new FormGroup({
             importe: new FormControl(),
