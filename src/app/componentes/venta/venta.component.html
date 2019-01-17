@@ -19,8 +19,8 @@
             <div class="form-group has-float-label ">
               <label for="idSocio" class="labelSocio">Socio</label>
               <input id="idSocio" class="form-control form-control-sm color-busqueda"
-                type="text" matInput [formControl]="formulario.get('socio')" [matAutocomplete]="auto" autocomplete="off" >
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnAlias.bind(this)" (optionSelected)="cambioAutocompletadoSocio()">
+                type="text" matInput [formControl]="formulario.get('socio')" [matAutocomplete]="auto" autocomplete="off" [readOnly]="socioHabilitado">
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnAlias.bind(this)" (optionSelected)="cambioAutocompletadoSocio()" >
                 <mat-option *ngFor="let socio of resultadoSocio" [value]="socio" > <!--(onSelectionChange)="cambioAutocompletadoSocio(socio)"-->
                   {{socio.alias}}
                 </mat-option>
@@ -69,9 +69,14 @@
           </div>
           <div class="col-md-2" *ngIf="mostrarMesAPagar">
             <div class="form-group has-float-label">
-              <label id="labelTelefono" for="idTelefono" class="tamanio-label">Año</label>
-              <input id="idTelefono" type="text" formControlName="formularioConsumo.get('anio')" autocomplete="off" pattern="[0-9]" maxlength="4" 
-                class="form-control form-control-sm" >
+              <div class="form-group has-float-label">
+                <label for="idConcepto" class="tamanio-label">Año</label>
+                <mat-select class="form-control form-control-sm" id="idConcepto" [formControl]="formularioConsumo.get('anio')" [compareWith]="compareFn">
+                    <mat-option *ngFor="let anio of listYears" [value]="anio" >
+                      {{anio }}
+                    </mat-option>
+                </mat-select>
+              </div>
             </div>
           </div>
           <div class="col-md-2">
@@ -92,7 +97,6 @@
                     <thead>
                       <tr>
                         <th class="text-center" style="width:5%" scope="col">#</th>
-                        <th class="text-center" style="width:15%" scope="col">Socio</th>
                         <th class="text-center" style="width:15%" scope="col">Concepto</th>
                         <th class="text-center" style="width:15%" scope="col">Mes a pagar/Cantidad</th>
                         <th class="text-center" style="width:20%" scope="col">Importe ($)</th>
@@ -107,17 +111,14 @@
                           <span>{{i+1}}</span>
                         </td>
                         <td class="td-edicion-tabla">
-                          <span>{{nombreDelSocio}}</span>
-                        </td>
-                        <td class="td-edicion-tabla">
                             <span>{{a.concepto.nombre}}</span>
                         </td>
-                        <td class="td-edicion-tabla" *ngIf="a.cantidad!=0; else mostrarMes">
+                        <td class="td-edicion-tabla" *ngIf="a.cantidad!=null">
                             <span>{{a.cantidad}}</span>
                         </td>
-                        <ng-template #mostrarMes>
-                            <span>{{a.mes}}</span>
-                        </ng-template>
+                        <td class="td-edicion-tabla" *ngIf="a.cantidad==null">
+                            <span>{{a.mes}} del {{a.anio}}</span>
+                        </td>  
                         <td class="td-edicion-tabla">
                             <span>{{a.importe}}</span>
                         </td>

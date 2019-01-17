@@ -25,6 +25,8 @@ export class ConceptoComponent implements OnInit {
   public autocompletado: FormControl=new FormControl();
   //Define la pestania actual seleccionada
   public pestaniaActual:string = null;
+  //Define el id del registro
+  public id: FormControl=new FormControl();
   //Define si mostrar el autocompletado
   public mostrarAutocompletado:boolean = null;
   //Define si el campo es de solo lectura
@@ -51,12 +53,12 @@ export class ConceptoComponent implements OnInit {
     //inicializa el formulario y sus elementos
     this.formulario= this.concepto.formulario;
     //Carga desde un principio las pestañas "Agregar, Consultar, Actualizar y listar"
-    this.subopcionPestaniaServicio.listarPestaniasPorSubopcion(1).subscribe(
-      res => {
-        this.pestanias= res.json();
-        this.activeLink= this.pestanias[0].pestania.nombre;
-      }
-    );
+    // this.subopcionPestaniaServicio.listarPestaniasPorSubopcion(1).subscribe(
+    //   res => {
+    //     this.pestanias= res.json();
+    //     this.activeLink= this.pestanias[0].pestania.nombre;
+    //   }
+    // );
     //Establece los valores, activando la primera pestania 
     this.seleccionarPestania(1, 'Agregar', 0);
     //Obtiene la lista completa de registros (los muestra en la pestaña Listar)
@@ -137,7 +139,7 @@ public accion(indice) {
   private obtenerSiguienteId(){
     this.conceptoService.obtenerSiguienteId().subscribe(
       res => {
-        this.formulario.get('id').setValue(res.json());
+        this.id.setValue(res.json());
       },
       err => {
       }
@@ -159,6 +161,7 @@ public accion(indice) {
       id: 1
     }
     this.formulario.get('usuarioAlta').setValue(usuario);
+    console.log(this.formulario.value);
     this.conceptoService.agregar(this.formulario.value).subscribe(
       res => {
         var respuesta = res.json();
@@ -190,13 +193,13 @@ public accion(indice) {
       id: 1
     }
     this.formulario.get('usuarioAlta').setValue(usuario);
-    this.formulario.get('usuarioMod').setValue(usuarioMod);
     console.log(this.formulario.value);
     this.conceptoService.actualizar(this.formulario.value).subscribe(
       res => {
         var respuesta = res.json();
         if(respuesta.codigo == 200) {
           this.reestablecerFormulario(undefined);
+          this.obtenerSiguienteId();
           setTimeout(function() {
             document.getElementById('idAutocompletado').focus();
           }, 20);
@@ -256,12 +259,14 @@ public accion(indice) {
     this.seleccionarPestania(2, this.pestanias[1].pestania.nombre, 1);
     this.autocompletado.setValue(elemento);
     this.formulario.patchValue(elemento);
+    this.id.setValue(elemento.id);
   }
   //Muestra en la pestania actualizar el elemento seleccionado de listar
   public activarActualizar(elemento) {
     this.seleccionarPestania(3, this.pestanias[2].pestania.nombre, 1);
     this.autocompletado.setValue(elemento);
     this.formulario.patchValue(elemento);
+    this.id.setValue(elemento.id);
   }
   //Maneja los evento al presionar una tacla (para pestanias y opciones)
   public manejarEvento(keycode) {

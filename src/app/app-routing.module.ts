@@ -15,9 +15,10 @@ import { VentaComponent } from './componentes/venta/venta.component';
 import { RolComponent } from './componentes/rol/rol.component';
 import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
 import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
+import { VencidosComponent } from './componentes/vencidos/vencidos.component';
 
 const routes: Routes = [
-  {path: '', component: VenceHoyComponent}
+  {path: '', component: VencidosComponent}
 ];
 
 @NgModule({

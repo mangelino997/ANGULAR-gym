@@ -12,8 +12,7 @@ export class Concepto {
             version: new FormControl(),
             nombre: new FormControl('', [Validators.required, Validators.maxLength(20)]),
             importe: new FormControl('', Validators.required),
-            usuarioAlta: new FormControl('', Validators.required),
-            usuarioMod: new FormControl()
+            usuarioAlta: new FormControl()
         })
     }
 }

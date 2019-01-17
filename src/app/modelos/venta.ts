@@ -11,7 +11,7 @@ export class Venta {
         this.formulario = new FormGroup({
             id: new FormControl(),
             fecha: new FormControl(),
-            socio: new FormControl('', Validators.required),
+            socio: new FormControl(),
             usuarioAlta: new FormControl(),
             importeAbona: new FormControl(),
             importeTotal: new FormControl(),
@@ -24,6 +24,7 @@ export class Venta {
             cantidad: new FormControl(),
             concepto: new FormControl(),
             anio: new FormControl(),
+            mes: new FormControl(),
             socio: new FormControl(),
             usuarioAlta: new FormControl()
           });

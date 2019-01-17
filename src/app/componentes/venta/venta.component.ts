@@ -5,6 +5,7 @@ import { Venta } from 'src/app/modelos/venta';
 import { SocioService } from 'src/app/servicios/socio.service';
 import { ConceptoService } from 'src/app/servicios/concepto.service';
 import { VentaService } from 'src/app/servicios/venta.service';
+import { FechaService } from 'src/app/servicios/fecha.service';
 
 @Component({
   selector: 'app-venta',
@@ -17,78 +18,52 @@ export class VentaComponent implements OnInit {
   // define el formulario Consumo"
   public formularioConsumo: FormGroup;
   //Define la lista completa de registros
-  public listaCompleta:Array<any> = [];
-  //Define la lista completa de registros
   public listaAgregar:Array<any> = [];
-  //Define la lista para tipo de factura
+  //Define la lista para tipo de Conceptos
   public listaConcepto:Array<any> = [];
+  //Define la lista para Años
+  public listYears:Array<any> = [];
   // define la lista de pestañas 
   public pestanias: Array<any>;
   // define el link que sera activado
   public activeLink: any;
-  // define el autocompletado como un formControl
-  public autocompletado: FormControl=new FormControl();
   //Define la pestania actual seleccionada
   public pestaniaActual:string = null;
-  //Define el nombre del concepto seleccionado
-  public nombreDelConcepto:string = null;
-  //Define el nombre del socio seleccionado
-  public idSocio:number = null;
-  
   //Define el importe del concepto seleccionado
   public importeDelConcepto:number = 0;
-
-  //Define si mostrar el autocompletado
-  public mostrarAutocompletado:boolean = null;
-
+  //Define si mostrar el autocompletado socio
+  public socioHabilitado:boolean = false;
   //Define si habilita el boton agregar
   public habilitado:boolean = false;
   //Define un boolean para mostrar determinados campos
   public mostrarMesAPagar:boolean = false;
-  
-  //Define si el campo es de solo lectura
-  public soloLectura:boolean = true;
   //Define el indice seleccionado de pestania
   public indiceSeleccionado:number = null;
-  // define al input socio como un FormControl 
-  public socio: FormControl=new FormControl();
-  // define al input concepto como un FormControl 
-  public concepto: FormControl=new FormControl();
-  // define al input cantidad como un FormControl 
-  public cantidad: FormControl=new FormControl();
-  
-  // define importeConcepto como un FormControl 
-  public importeConcepto: FormControl=new FormControl();
-  // define al input importe como un FormControl 
-  public importe: FormControl=new FormControl();
-  public elemento: Array<any> = [];
-  //Define el form control para las busquedas vendedor
-  public buscarTipoFormulario:FormControl = new FormControl();
   //Define la lista de resultados de socios
   public resultadoSocio = [];
 
-  constructor(private conceptoService: ConceptoService ,private socioService: SocioService, private ventaService: VentaService ,private venta: Venta, private formBuilder: FormBuilder, private toastr: ToastrService) {
-    
+  constructor(private fechaService: FechaService ,private conceptoService: ConceptoService ,private socioService: SocioService, private ventaService: VentaService ,private venta: Venta, private formBuilder: FormBuilder, private toastr: ToastrService) {
     //Establece la pestania activa por defecto
     this.activeLink = 1;
     //Establece el indice activo por defecto
     this.indiceSeleccionado = 1;
-
    }
-
   ngOnInit() {
-    //obtenemos la fecha actual
+    // obtenemos la fecha actual
     var dateDay = new Date().toISOString().substring(0,10);
-    //inicializa el formulario y sus elementos
+    // inicializa el formulario y sus elementos
     this.formulario= this.venta.formulario;
     this.formulario.get('fecha').setValue(dateDay);
-    //define el formulario de Consumos que es de tipo array (puede tener varias filas)
+    // define el formulario de Consumos que es de tipo array (puede tener varias filas)
     this.formularioConsumo= this.venta.formularioConsumo;
-    //inicializa el select de concepto
+    // inicializa el select de concepto
     this.listarConcepto();
+    // inicializa el select de años
+    this.listarAnios();
     setTimeout(function() {
       document.getElementById('idFecha').focus();
-    }, 20);    //Autocompletado - Buscar por Socio
+    }, 20);    
+    //Autocompletado - Buscar por Socio
     this.formulario.get('socio').valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.socioService.listarPorAlias(data).subscribe(response =>{
@@ -108,10 +83,20 @@ export class VentaComponent implements OnInit {
       }
     );
   }
+  // Carga en el select de Años
+  public listarAnios(){
+    this.fechaService.listarCincoAnios().subscribe(
+      res => {
+        this.listYears=res.json();
+      },
+      err => {
+        this.toastr.error("No se pueden listar los años siguientes");
+      }
+    );
+  }
   //Manejo de cambio de autocompletado de tipo formulario
   public cambioAutocompletadoSocio() {
-    this.idSocio=this.formulario.get('socio').value.id;
-    this.socioService.esDeudor(this.idSocio).subscribe(res=>{
+    this.socioService.esDeudor(this.formulario.get('socio').value.id).subscribe(res=>{
       let respuesta= res.json();
       if(respuesta== true){
         this.toastr.error("El Socio es Deudor!");
@@ -120,39 +105,22 @@ export class VentaComponent implements OnInit {
   }
   //Maneja el cambio de tipo de concepto
   public cambioAutocompletadoConcepto() {
-    var elemento= this.formularioConsumo.get('concepto').value;
-    //this.formularioConsumo.get('concepto').setValue(elemento.id);
-    this.importeDelConcepto=0;
-    this.nombreDelConcepto="";
     this.mostrarMesAPagar=null;
-    if(elemento.id==1){
+    if(this.formularioConsumo.get('concepto').value.id==1){
       this.mostrarMesAPagar=true;
-      /*valores de prueba
-      let importe=500;
-      this.formularioConsumo.get('concepto').setValue(elemento.nombre);
-      this.formularioConsumo.get('importe').setValue(importe);
-      this.importe.setValue(importe);
-      */
-      //Valores posta
-        this.socioService.obtenerImporteYEsDeudor(this.formulario.get('socio').value).subscribe(res=>{
+        this.socioService.obtenerImporteYEsDeudor(this.formulario.get('socio').value.id).subscribe(res=>{
          let respuesta= res.json();
-         console.log(respuesta);
-         this.formularioConsumo.get('concepto').setValue(elemento.id);
          this.formularioConsumo.get('importe').setValue(respuesta.importe);
-
       });
     }else{
       this.mostrarMesAPagar=false;
-      this.importeDelConcepto=elemento.importe;
-      this.nombreDelConcepto=elemento.nombre;
+      this.importeDelConcepto=this.formularioConsumo.get('concepto').value.importe;
     }
   }
-  
   //Calcular Importe cuando el concepto sea != 1 || diferente de "cuota"
   public calcularImporteSiNoEsCuota(){
     //seteo como que si es deudor para probarlo
-    console.log(this.formularioConsumo.value);
-    let importe=this.formularioConsumo.get('cantidad').value*this.importeDelConcepto;
+    let importe=this.formularioConsumo.get('cantidad').value*this.formularioConsumo.get('concepto').value.importe;
     this.formularioConsumo.get('importe').setValue(importe);  
     }
   //Formatea el valor del autocompletado
@@ -183,29 +151,29 @@ export class VentaComponent implements OnInit {
   }
   //Agrega una fila a la  tabla
   public agregarElemento() {
-    this.formularioConsumo.get('concepto').setValue(this.formularioConsumo.get('concepto').value.id);//solo guardo el id en concepto, descarto los otros datos que ya use
-    this.formularioConsumo.get('usuarioAlta').setValue(1);
+    let usuario= {
+      id: 1
+    }
+    this.formularioConsumo.get('usuarioAlta').setValue(usuario);
+    this.formularioConsumo.get('socio').setValue(this.formulario.get('socio').value);
     this.listaAgregar.push(this.formularioConsumo.value);
-    let importeTotal: number= <number>this.formulario.get('importeTotal').value + <number>this.formularioConsumo.get('importe').value;
-    this.formulario.get('importeTotal').setValue(importeTotal);
+    this.formulario.get('importeTotal').setValue(<number>this.formulario.get('importeTotal').value + <number>this.formularioConsumo.get('importe').value);
     setTimeout(function() {
       document.getElementById('idConcepto').focus();
     }, 20);
-    this.formulario.get('socio').disable();
     this.formularioConsumo.get('cantidad').reset();
     this.formularioConsumo.get('importe').reset();
-
-//    this.reestablecerFormulario();
+    this.socioHabilitado=true;
+    console.log(this.listaAgregar);
   }
   //Elimina una fila de la segunda tabla
   public eliminarElemento(indice, montoRestar) {
-    let montoTotal= this.formulario.get('importeTotal').value;
-    this.formulario.get('importeTotal').setValue(montoTotal-montoRestar);
+    // let montoTotal= this.formulario.get('importeTotal').value;
+    this.formulario.get('importeTotal').setValue(this.formulario.get('importeTotal').value-montoRestar);
     this.listaAgregar.splice(indice, 1); 
     if(this.listaAgregar.length==0){
       this.formulario.get('socio').enable();
-      this.autocompletado.reset();
-      montoTotal=0;
+      this.formulario.get('importeTotal').setValue(0);
       setTimeout(function() {
         document.getElementById('idSocio').focus();
       }, 20);
@@ -214,17 +182,18 @@ export class VentaComponent implements OnInit {
       this.formulario.get('socio').disable();
     }
   }
-  //Agrega un registro 
+//Agrega un registro 
 public agregar(){
+  let usuario= {
+    id: 1
+  }
   this.formulario.get('consumos').setValue(this.listaAgregar);// Agrego el array de consumos agregados a la lista
-  this.formulario.get('socio').setValue(this.idSocio); //seteo el id del socio
-  this.formulario.get('usuarioAlta').setValue(1);
+  this.formulario.get('usuarioAlta').setValue(usuario);
   console.log(this.formulario.value);
   this.ventaService.agregar(this.formulario.value).subscribe(
    res => {
        var respuesta = res.json();
        if(respuesta.codigo == 201) {
-         this.autocompletado.reset();
          this.listaAgregar = [];
          this.reestablecerFormulario();
          setTimeout(function() {
@@ -244,16 +213,8 @@ public agregar(){
 }
 //Reestablece los campos formularios
 private reestablecerFormulario() {
-  /*
-  this.cantidad.reset();
-  this.importe.reset();
-  this.cantidad.setValue(0);
-  this.concepto.reset();
-  this.importeDelConcepto=0;
-  this.nombreDelConcepto="";
-  */
   this.formulario.reset();
   this.formularioConsumo.reset();
-  this.idSocio=null;
+  this.socioHabilitado=false;
   }
 }

@@ -1,0 +1,47 @@
+<div id="agendatelefonica" class="container-fluid">
+    <div class="row justify-content-center contenedor">
+        <div class="col-md-10 text-center">
+            <h5>Vencidos</h5>
+            <table class="table table-bordered table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th class="text-center" style="width:10%" scope="col">#</th>
+                        <th class="text-center" style="width:15%" scope="col">Nombre</th>
+                        <th class="text-center" style="width:15%" scope="col">DNI</th>
+                        <th class="text-center" style="width:10%" scope="col">Usuario</th>
+                        <th class="text-center" style="width:20%" scope="col">Último Pago</th>
+                        <th class="text-center" style="width:20%" scope="col">Teléfono</th>
+                        <th class="text-center" style="width:10%" scope="col" >
+                          <span class="" (click)="eliminarElemento()">-</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <tr  *ngFor="let a of list; let i = index" > 
+                        <td class="td-edicion-tabla">
+                          <span>{{a.id}}</span>
+                        </td>
+                        <td class="td-edicion-tabla">
+                            <span>{{a.nombre}}</span>
+                        </td>
+                        <td class="td-edicion-tabla" >
+                            <span>{{a.dni}}</span>
+                        </td>
+                        <td class="td-edicion-tabla">
+                                <span>{{a.usuario}}</span>
+                            </td> 
+                        <td class="td-edicion-tabla">
+                            <span>{{a.fechaPagoAnterior}}</span>
+                        </td>  
+                        <td class="td-edicion-tabla">
+                            <span>{{a.telefono}}</span>
+                        </td>
+                        <td class="td-edicion-tabla">
+                          <span class="cursor-color" (click)="eliminateExpired(a.id)">X</span>
+                        </td>
+                      </tr>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
