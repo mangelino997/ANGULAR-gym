@@ -12,6 +12,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 
+
 //COMPONENTES
 import { ModuloComponent } from './componentes/modulo/modulo.component';
 import { SubopcionComponent } from './componentes/subopcion/subopcion.component';
@@ -31,6 +32,9 @@ import { HeaderComponent } from './componentes/home/sidenav/header/header/header
 import { LogoComponent } from './componentes/home/sidenav/header/logo/logo.component';
 import { SidenavComponent } from './componentes/home/sidenav/sidenav/sidenav.component';
 import { FooterComponent } from './componentes/home/footer/footer.component';
+import { SocioComponent } from './componentes/socio/socio.component';
+import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
+import { ToolbarMenuComponent } from './componentes/home/toolbar-menu/toolbar-menu.component';
 
 //SERVICIOS
 import { SubopcionService } from './servicios/subopcion.service';
@@ -50,6 +54,7 @@ import { GrupoMaquinaService } from './servicios/grupo-maquina.service';
 import { GrupoMuscularService } from './servicios/grupo-muscular.service';
 import { ProfesorService } from './servicios/profesor.service';
 import { VentaService } from './servicios/venta.service';
+import { SocioService } from './servicios/socio.service';
 
 //MODELOS
 import { Usuario } from './modelos/usuario';
@@ -64,12 +69,11 @@ import { Ejercicio } from './modelos/ejercicio';
 import { Foto } from './modelos/foto';
 import { Lesion } from './modelos/lesion';
 import { Profesor } from './modelos/profesor';
-import { SocioComponent } from './componentes/socio/socio.component';
-import { SocioService } from './servicios/socio.service';
 import { Socio } from './modelos/socio';
 import { Venta } from './modelos/venta';
-import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
-import { ToolbarMenuComponent } from './componentes/home/toolbar-menu/toolbar-menu.component';
+import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
+import { VenceManianaComponent } from './componentes/vence-maniana/vence-maniana.component';
+
 
 @NgModule({
   declarations: [
@@ -94,7 +98,9 @@ import { ToolbarMenuComponent } from './componentes/home/toolbar-menu/toolbar-me
     LogoComponent,
     SidenavComponent,
     FooterComponent,
-    ToolbarMenuComponent
+    ToolbarMenuComponent,
+    VenceHoyComponent,
+    VenceManianaComponent
   ],
   imports: [
     BrowserModule,

@@ -10,15 +10,9 @@ export class Venta {
         // crear el formulario para la seccion de modulos
         this.formulario = new FormGroup({
             id: new FormControl(),
-            version: new FormControl(),
             fecha: new FormControl(),
-            mes: new FormControl('',[Validators.required, Validators.maxLength(10)]),
-            anio: new FormControl('', [Validators.required, Validators.maxLength(10)]),
-            saldo: new FormControl('', Validators.required),
-            estaActivo: new FormControl('', Validators.required),
             socio: new FormControl('', Validators.required),
-            idUsuarioAlta: new FormControl('', Validators.required),
-            idUsuarioMod: new FormControl(),
+            usuarioAlta: new FormControl(),
             importeAbona: new FormControl(),
             importeTotal: new FormControl(),
             consumos: new FormControl()
@@ -27,8 +21,9 @@ export class Venta {
             importe: new FormControl(),
             cantidad: new FormControl(),
             concepto: new FormControl(),
-            mes: new FormControl(),
             anio: new FormControl(),
+            socio: new FormControl(),
+            usuarioAlta: new FormControl()
           });
 
     }

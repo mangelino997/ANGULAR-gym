@@ -33,7 +33,7 @@ export class VentaComponent implements OnInit {
   //Define el nombre del concepto seleccionado
   public nombreDelConcepto:string = null;
   //Define el nombre del socio seleccionado
-  public nombreDelSocio:string = null;
+  public idSocio:number = null;
   
   //Define el importe del concepto seleccionado
   public importeDelConcepto:number = 0;
@@ -86,7 +86,9 @@ export class VentaComponent implements OnInit {
     this.formularioConsumo= this.venta.formularioConsumo;
     //inicializa el select de concepto
     this.listarConcepto();
-    //Autocompletado - Buscar por Socio
+    setTimeout(function() {
+      document.getElementById('idFecha').focus();
+    }, 20);    //Autocompletado - Buscar por Socio
     this.formulario.get('socio').valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.socioService.listarPorAlias(data).subscribe(response =>{
@@ -107,11 +109,9 @@ export class VentaComponent implements OnInit {
     );
   }
   //Manejo de cambio de autocompletado de tipo formulario
-  public cambioAutocompletadoSocio(elemento) {
-    var elemento=this.formulario.get('socio').value;
-    this.formulario.get('socio').setValue(elemento.id);
-    this.nombreDelSocio=elemento.nombre;
-    this.socioService.esDeudor(elemento.id).subscribe(res=>{
+  public cambioAutocompletadoSocio() {
+    this.idSocio=this.formulario.get('socio').value.id;
+    this.socioService.esDeudor(this.idSocio).subscribe(res=>{
       let respuesta= res.json();
       if(respuesta== true){
         this.toastr.error("El Socio es Deudor!");
@@ -120,7 +120,6 @@ export class VentaComponent implements OnInit {
   }
   //Maneja el cambio de tipo de concepto
   public cambioAutocompletadoConcepto() {
-    console.log(this.formularioConsumo.get('concepto').value);
     var elemento= this.formularioConsumo.get('concepto').value;
     //this.formularioConsumo.get('concepto').setValue(elemento.id);
     this.importeDelConcepto=0;
@@ -138,7 +137,7 @@ export class VentaComponent implements OnInit {
         this.socioService.obtenerImporteYEsDeudor(this.formulario.get('socio').value).subscribe(res=>{
          let respuesta= res.json();
          console.log(respuesta);
-         this.formularioConsumo.get('concepto').setValue(elemento.nombre);
+         this.formularioConsumo.get('concepto').setValue(elemento.id);
          this.formularioConsumo.get('importe').setValue(respuesta.importe);
 
       });
@@ -164,6 +163,13 @@ export class VentaComponent implements OnInit {
       return elemento;
     }
   }
+  public displayFnAlias(elemento) {
+    if(elemento != undefined) {
+      return elemento.alias ? elemento.alias : elemento;
+    } else {
+      return elemento;
+    }
+  }
   //Define el mostrado de datos y comparacion en campo select
   public compareFn = this.compararFn.bind(this);
   private compararFn(a, b) {
@@ -177,13 +183,19 @@ export class VentaComponent implements OnInit {
   }
   //Agrega una fila a la  tabla
   public agregarElemento() {
-    console.log(this.formularioConsumo.value);
+    this.formularioConsumo.get('concepto').setValue(this.formularioConsumo.get('concepto').value.id);//solo guardo el id en concepto, descarto los otros datos que ya use
+    this.formularioConsumo.get('usuarioAlta').setValue(1);
     this.listaAgregar.push(this.formularioConsumo.value);
     let importeTotal: number= <number>this.formulario.get('importeTotal').value + <number>this.formularioConsumo.get('importe').value;
     this.formulario.get('importeTotal').setValue(importeTotal);
-    document.getElementById('idSocio').focus();
+    setTimeout(function() {
+      document.getElementById('idConcepto').focus();
+    }, 20);
     this.formulario.get('socio').disable();
-    this.reestablecerFormulario();
+    this.formularioConsumo.get('cantidad').reset();
+    this.formularioConsumo.get('importe').reset();
+
+//    this.reestablecerFormulario();
   }
   //Elimina una fila de la segunda tabla
   public eliminarElemento(indice, montoRestar) {
@@ -193,6 +205,10 @@ export class VentaComponent implements OnInit {
     if(this.listaAgregar.length==0){
       this.formulario.get('socio').enable();
       this.autocompletado.reset();
+      montoTotal=0;
+      setTimeout(function() {
+        document.getElementById('idSocio').focus();
+      }, 20);
     }
     else{
       this.formulario.get('socio').disable();
@@ -201,6 +217,8 @@ export class VentaComponent implements OnInit {
   //Agrega un registro 
 public agregar(){
   this.formulario.get('consumos').setValue(this.listaAgregar);// Agrego el array de consumos agregados a la lista
+  this.formulario.get('socio').setValue(this.idSocio); //seteo el id del socio
+  this.formulario.get('usuarioAlta').setValue(1);
   console.log(this.formulario.value);
   this.ventaService.agregar(this.formulario.value).subscribe(
    res => {
@@ -209,7 +227,6 @@ public agregar(){
          this.autocompletado.reset();
          this.listaAgregar = [];
          this.reestablecerFormulario();
-         this.formulario.reset();
          setTimeout(function() {
            document.getElementById('idSocio').focus();
          }, 20);
@@ -235,6 +252,8 @@ private reestablecerFormulario() {
   this.importeDelConcepto=0;
   this.nombreDelConcepto="";
   */
+  this.formulario.reset();
   this.formularioConsumo.reset();
+  this.idSocio=null;
   }
 }

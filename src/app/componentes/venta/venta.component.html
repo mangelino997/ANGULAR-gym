@@ -20,7 +20,7 @@
               <label for="idSocio" class="labelSocio">Socio</label>
               <input id="idSocio" class="form-control form-control-sm color-busqueda"
                 type="text" matInput [formControl]="formulario.get('socio')" [matAutocomplete]="auto" autocomplete="off" >
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)" (optionSelected)="cambioAutocompletadoSocio()">
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnAlias.bind(this)" (optionSelected)="cambioAutocompletadoSocio()">
                 <mat-option *ngFor="let socio of resultadoSocio" [value]="socio" > <!--(onSelectionChange)="cambioAutocompletadoSocio(socio)"-->
                   {{socio.alias}}
                 </mat-option>
