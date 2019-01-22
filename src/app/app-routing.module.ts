@@ -15,10 +15,26 @@ import { VentaComponent } from './componentes/venta/venta.component';
 import { RolComponent } from './componentes/rol/rol.component';
 import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
 import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
+import { VenceManianaComponent } from './componentes/vence-maniana/vence-maniana.component';
 import { VencidosComponent } from './componentes/vencidos/vencidos.component';
+import { PrincipalComponent } from './componentes/home/principal/principal.component';
 
 const routes: Routes = [
-  {path: '', component: VencidosComponent}
+  {path: '', component: PrincipalComponent},
+  {path: 'sociosadministrar', component: SocioComponent},
+  {path: 'sociosvencidos', component: VencidosComponent},
+  {path: 'sociosvencenhoy', component: VenceHoyComponent},
+  {path: 'sociosvencenmanana', component: VenceManianaComponent},
+  {path: 'socioscumpleanos', component: CumpleaniosComponent},
+  {path: 'administracionproductos', component: ConceptoComponent},
+  {path: 'administracionventas', component: VentaComponent},
+  {path: 'actividadesadministrar', component: ActividadComponent},
+  {path: 'profesoresadministrar', component: ProfesorComponent},
+  {path: 'planesejercicios', component: EjercicioComponent},
+  {path: 'planeslesiones', component: LesionComponent},
+  {path: 'usuariosadministrar', component: UsuarioComponent},
+  {path: 'usuariosroles', component: RolComponent},
+  {path: 'actividadesimporteactextra', component: ActividadExtraComponent}
 ];
 
 @NgModule({

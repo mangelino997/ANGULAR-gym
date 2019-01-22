@@ -12,30 +12,6 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 
-
-//COMPONENTES
-import { ModuloComponent } from './componentes/modulo/modulo.component';
-import { SubopcionComponent } from './componentes/subopcion/subopcion.component';
-import { PestaniaComponent } from './componentes/pestania/pestania.component';
-import { RolComponent } from './componentes/rol/rol.component';
-import { UsuarioComponent } from './componentes/usuario/usuario.component';
-import { ActividadComponent } from './componentes/actividad/actividad.component';
-import { ActividadExtraComponent } from './componentes/actividad-extra/actividad-extra.component';
-import { ConceptoComponent } from './componentes/concepto/concepto.component';
-import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component';
-import { LesionComponent } from './componentes/lesion/lesion.component';
-import { ProfesorComponent } from './componentes/profesor/profesor.component';
-import { VentaComponent } from './componentes/venta/venta.component';
-import { ToolbarComponent } from './componentes/home/toolbar/toolbar/toolbar.component';
-import { ToolbarProfileComponent } from './componentes/home/toolbar/toolbar-profile/toolbar-profile.component';
-import { HeaderComponent } from './componentes/home/sidenav/header/header/header.component';
-import { LogoComponent } from './componentes/home/sidenav/header/logo/logo.component';
-import { SidenavComponent } from './componentes/home/sidenav/sidenav/sidenav.component';
-import { FooterComponent } from './componentes/home/footer/footer.component';
-import { SocioComponent } from './componentes/socio/socio.component';
-import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
-import { ToolbarMenuComponent } from './componentes/home/toolbar-menu/toolbar-menu.component';
-
 //SERVICIOS
 import { SubopcionService } from './servicios/subopcion.service';
 import { ModuloService } from './servicios/modulo.service';
@@ -71,10 +47,33 @@ import { Lesion } from './modelos/lesion';
 import { Profesor } from './modelos/profesor';
 import { Socio } from './modelos/socio';
 import { Venta } from './modelos/venta';
+
+//COMPONENTES
+import { ModuloComponent } from './componentes/modulo/modulo.component';
+import { SubopcionComponent } from './componentes/subopcion/subopcion.component';
+import { PestaniaComponent } from './componentes/pestania/pestania.component';
+import { RolComponent } from './componentes/rol/rol.component';
+import { UsuarioComponent } from './componentes/usuario/usuario.component';
+import { ActividadComponent } from './componentes/actividad/actividad.component';
+import { ActividadExtraComponent } from './componentes/actividad-extra/actividad-extra.component';
+import { ConceptoComponent } from './componentes/concepto/concepto.component';
+import { EjercicioComponent } from './componentes/ejercicio/ejercicio.component';
+import { LesionComponent } from './componentes/lesion/lesion.component';
+import { ProfesorComponent } from './componentes/profesor/profesor.component';
+import { VentaComponent } from './componentes/venta/venta.component';
+import { ToolbarComponent } from './componentes/home/toolbar/toolbar/toolbar.component';
+import { ToolbarProfileComponent } from './componentes/home/toolbar/toolbar-profile/toolbar-profile.component';
+import { HeaderComponent } from './componentes/home/sidenav/header/header/header.component';
+import { LogoComponent } from './componentes/home/sidenav/header/logo/logo.component';
+import { SidenavComponent } from './componentes/home/sidenav/sidenav/sidenav.component';
+import { FooterComponent } from './componentes/home/footer/footer.component';
+import { SocioComponent } from './componentes/socio/socio.component';
+import { CumpleaniosComponent } from './componentes/cumpleanios/cumpleanios.component';
+import { ToolbarMenuComponent } from './componentes/home/toolbar-menu/toolbar-menu.component';
 import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
 import { VenceManianaComponent } from './componentes/vence-maniana/vence-maniana.component';
 import { VencidosComponent } from './componentes/vencidos/vencidos.component';
-
+import { PrincipalComponent } from './componentes/home/principal/principal.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +101,8 @@ import { VencidosComponent } from './componentes/vencidos/vencidos.component';
     ToolbarMenuComponent,
     VenceHoyComponent,
     VenceManianaComponent,
-    VencidosComponent
+    VencidosComponent,
+    PrincipalComponent
   ],
   imports: [
     BrowserModule,
@@ -168,7 +168,6 @@ import { VencidosComponent } from './componentes/vencidos/vencidos.component';
     Profesor,
     Socio,
     Venta
-
   ],
   bootstrap: [AppComponent],
   entryComponents: []
