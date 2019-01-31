@@ -45,7 +45,6 @@ export class ActividadComponent implements OnInit {
       }
     })
    }
-
   ngOnInit() {
     //inicializa el formulario y sus elementos
     this.formulario= this.actividad.formulario;

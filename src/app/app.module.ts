@@ -74,6 +74,7 @@ import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
 import { VenceManianaComponent } from './componentes/vence-maniana/vence-maniana.component';
 import { VencidosComponent } from './componentes/vencidos/vencidos.component';
 import { PrincipalComponent } from './componentes/home/principal/principal.component';
+import { DeudoresComponent } from './componentes/deudores/deudores.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,8 @@ import { PrincipalComponent } from './componentes/home/principal/principal.compo
     VenceHoyComponent,
     VenceManianaComponent,
     VencidosComponent,
-    PrincipalComponent
+    PrincipalComponent,
+    DeudoresComponent
   ],
   imports: [
     BrowserModule,
