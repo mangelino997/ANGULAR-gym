@@ -18,6 +18,7 @@ import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
 import { VenceManianaComponent } from './componentes/vence-maniana/vence-maniana.component';
 import { VencidosComponent } from './componentes/vencidos/vencidos.component';
 import { PrincipalComponent } from './componentes/home/principal/principal.component';
+import { DeudoresComponent } from './componentes/deudores/deudores.component';
 
 const routes: Routes = [
   {path: '', component: PrincipalComponent},
@@ -27,14 +28,20 @@ const routes: Routes = [
   {path: 'sociosvencenmanana', component: VenceManianaComponent},
   {path: 'socioscumpleanos', component: CumpleaniosComponent},
   {path: 'administracionproductos', component: ConceptoComponent},
-  {path: 'administracionventas', component: VentaComponent},
+  {path: 'administracionpagocuota', component: VentaComponent},
+
+  
+  //{path: 'administracionventas', component: VentaComponent},
   {path: 'actividadesadministrar', component: ActividadComponent},
   {path: 'profesoresadministrar', component: ProfesorComponent},
   {path: 'planesejercicios', component: EjercicioComponent},
   {path: 'planeslesiones', component: LesionComponent},
   {path: 'usuariosadministrar', component: UsuarioComponent},
   {path: 'usuariosroles', component: RolComponent},
-  {path: 'actividadesimporteactextra', component: ActividadExtraComponent}
+  {path: 'actividadesimporteactextra', component: ActividadExtraComponent},
+  {path: 'sociosdeudores', component: DeudoresComponent}
+
+  
 ];
 
 @NgModule({

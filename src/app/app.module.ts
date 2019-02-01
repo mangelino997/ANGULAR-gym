@@ -74,7 +74,7 @@ import { VenceHoyComponent } from './componentes/vence-hoy/vence-hoy.component';
 import { VenceManianaComponent } from './componentes/vence-maniana/vence-maniana.component';
 import { VencidosComponent } from './componentes/vencidos/vencidos.component';
 import { PrincipalComponent } from './componentes/home/principal/principal.component';
-import { DeudoresComponent } from './componentes/deudores/deudores.component';
+import { DeudoresComponent, DetalleModal } from './componentes/deudores/deudores.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +104,8 @@ import { DeudoresComponent } from './componentes/deudores/deudores.component';
     VenceManianaComponent,
     VencidosComponent,
     PrincipalComponent,
-    DeudoresComponent
+    DeudoresComponent,
+    DetalleModal
   ],
   imports: [
     BrowserModule,
@@ -172,6 +173,6 @@ import { DeudoresComponent } from './componentes/deudores/deudores.component';
     Venta
   ],
   bootstrap: [AppComponent],
-  entryComponents: []
+  entryComponents: [DetalleModal]
 })
 export class AppModule { }
