@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray,FormBuilder } from '@angular/forms';
 import { SubopcionPestaniaService } from 'src/app/servicios/subopcion-pestania.service';
 import { ToastrService } from 'ngx-toastr';
 import { Concepto } from 'src/app/modelos/concepto';
@@ -18,14 +18,23 @@ export class DeudoresComponent implements OnInit {
 
   // define el formulario
   public formulario: FormGroup;
+  // define el formulario para Historial
+  public formularioHistorial: FormGroup;
   //Define la lista completa de registros
-  public listaCompleta:Array<any> = [];
+  public listaHistorialDeudas:Array<any> = [];
+  //Define la lista de deudas del socio
+  public listaSocioDedudas:Array<any> = [];
+  //Define la lista de deudores
+  public listaDeudores:Array<any> = [];
   // define la lista de pestañas 
   public pestanias: Array<any>;
   // define el link que sera activado
   public activeLink: any;
   // define el autocompletado como un formControl
   public autocompletado: FormControl=new FormControl();
+  // define el autocompletado como un formControl
+  public autocompletadoHistorial: FormControl=new FormControl();
+  
   //Define la pestania actual seleccionada
   public pestaniaActual:string = null;
   //Define el id del registro
@@ -40,10 +49,31 @@ export class DeudoresComponent implements OnInit {
   public indiceSeleccionado:number = null;
   //Define la lista de resultados de busqueda
   public socios:Array<any> = [];
-  //Define la lista de deudas del socio
-  public socioDeuda:Array<any> = [];
+  //Define la lista para deudas añadidas para SALDAR
+  public deudasASaldar:Array<any> = [];
+  //Define la lista para deudas añadidas para SALDAR
+  public consumoASaldar:Array<any> = [];
+  //Define la bandera si el check esta en true o false
+  public bandera: boolean;
+
   
-  constructor(private socio: Socio, public dialog: MatDialog,  private socioService: SocioService, private consumoServicio: ConsumoService, private toastr: ToastrService) {
+  constructor(private formBuilder: FormBuilder, private socio: Socio, public dialog: MatDialog,  private socioService: SocioService, private consumoServicio: ConsumoService, private toastr: ToastrService) {
+     
+   }
+
+  
+  ngOnInit() {
+    //inicializa el formulario 
+    this.formulario= new FormGroup({});
+    //inicializa el formulario historial
+    this.formularioHistorial= new FormGroup({});
+    //Establece la pestania activa por defecto
+    this.activeLink = 1;
+    //Establece el indice activo por defecto
+    this.indiceSeleccionado = 1;
+    //Lista todos los deudores
+    this.listarDeudores();
+    //Controla el autocompletado
     this.autocompletado.valueChanges.subscribe(data => {
       if(typeof data == 'string') {
         this.socioService.listarPorAlias(data).subscribe(res => {
@@ -51,74 +81,42 @@ export class DeudoresComponent implements OnInit {
         })
       }
     })
-   }
-
-  //declaramos los metodos para utilizar el Modal/Dialog
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DetalleModal, {
-      width: '750px',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-    });
-  }
-  ngOnInit() {
-    //inicializa el formulario
-    this.formulario= this.socio.formulario;
-    //Establece los valores, activando la primera pestania 
-    this.seleccionarPestania(1, 'Consultar', 0);
-    //Lista todos los deudores
-    this.listarDeudores();
+    //Controla el autocompletado
+    this.autocompletadoHistorial.valueChanges.subscribe(data => {
+      if(typeof data == 'string') {
+        this.socioService.listarPorAlias(data).subscribe(res => {
+          this.socios = res.json();
+        })
+      }
+    })
   }
   //Establece el formulario al seleccionar elemento del autocompletado
-  public cambioAutocompletado(elemento) {
-    this.formulario.patchValue(elemento);
+  public cambioAutocompletado() {
+    this.consumoServicio.listarDeudasPorSocio(this.autocompletado.value.id).subscribe(res=>{
+      this.listaSocioDedudas= res.json();
+    });
+  }
+  //Establece el formulario al seleccionar elemento del autocompletado
+  public cambioHistorial() {
+    this.consumoServicio.listarDeudasPorSocio(this.autocompletadoHistorial.value.id).subscribe(res=>{
+      this.listaHistorialDeudas= res.json();
+    });
   }
   //Formatea el valor del autocompletado
   public displayFn(elemento) {
     if(elemento != undefined) {
-      return elemento.nombre ? elemento.nombre : elemento;
+      return elemento.alias ? elemento.alias : elemento;
     } else {
       return elemento;
     }
   }
-  //Funcion para establecer los valores de las pestañas
-  private establecerValoresPestania(nombrePestania, autocompletado, soloLectura, boton, componente) {
-    this.pestaniaActual = nombrePestania;
-    this.mostrarAutocompletado = autocompletado;
-    this.soloLectura = soloLectura;
-    this.mostrarBoton = boton;
-    /*setTimeout(function () {
-      document.getElementById(componente).focus();
-    }, 20); */
-  };
   //Establece valores al seleccionar una pestania
-  public seleccionarPestania(id, nombre, opcion) {
-    this.formulario.reset();
+  public seleccionarPestania(id, nombre) {
+    this.autocompletado.reset();
+    this.listaSocioDedudas=[];
     this.indiceSeleccionado = id;
     this.activeLink = nombre;
     this.listarDeudores();
-    /*
-    * Se vacia el formulario solo cuando se cambia de pestania, no cuando
-    * cuando se hace click en ver o mod de la pestania lista
-    */
-   if(opcion == 0) {
-    this.autocompletado.setValue(undefined);
-    this.socios = [];
-  }
-  switch (id) {
-    case 1:
-      this.establecerValoresPestania(nombre, false, false, true, 'idNombre');
-      break;
-    case 2:
-      this.establecerValoresPestania(nombre, true, true, true, 'idAutocompletado');
-      break;
-    case 3:
-      this.establecerValoresPestania(nombre, true, true, false, 'idAutocompletado');
-      break;
-    default:
-      break;
-  }
 }
 //Funcion para determina que accion se requiere (Agregar, Actualizar, Eliminar)
 public accion(indice) {
@@ -134,7 +132,8 @@ public accion(indice) {
   private listarDeudores(){
     this.consumoServicio.listar().subscribe(
       res => {
-        this.listaCompleta=res.json();
+        this.listaDeudores=res.json();
+        console.log(this.listaDeudores);
       },
       err => {
       }
@@ -170,42 +169,48 @@ public accion(indice) {
       }
     );
   } */
-  //Reestablece los campos formularios
-  private reestablecerFormulario(id) {
-    this.formulario.reset();
-    this.formulario.get('id').setValue(id);
-    this.autocompletado.setValue(undefined);
-    this.socios = [];
-    this.listarDeudores();
-  }
   //Manejo de colores de campos y labels
   public cambioCampo(id, label) {
     document.getElementById(id).classList.remove('is-invalid');
     document.getElementById(label).classList.remove('label-error');
   };
-  //Muestra en la pestania buscar el elemento seleccionado de listar
-  public activarConsultar(elemento) {
-    this.seleccionarPestania(2, this.pestanias[1].pestania.nombre, 1);
-    this.autocompletado.setValue(elemento);
-    this.formulario.patchValue(elemento);
-    this.id.setValue(elemento.id);
-  }
-  //Maneja los evento al presionar una tacla (para pestanias y opciones)
-  public manejarEvento(keycode) {
-    var indice = this.indiceSeleccionado;
-    if(keycode == 113) {
-      if(indice < this.pestanias.length) {
-        this.seleccionarPestania(indice+1, this.pestanias[indice].pestania.nombre, 0);
-      } else {
-        this.seleccionarPestania(1, this.pestanias[0].pestania.nombre, 0);
-      }
+  //Determina que accion realizar con el Consumo (segun si es checkeado)
+  public accionConsumo(pago, $event, indice){
+    if($event.checked==true){
+      this.agregarConsumo(pago, $event);
+    }else{
+      this.eliminarConsumo(indice);
     }
   }
-  //Busca las deudas del socio seleccionado
-  public consultarDeudas(){
-    this.consumoServicio.listarDeudasPorSocio(this.formulario.get('id').value).subscribe(res=>{
-      this.socioDeuda= res.json();
+  // añade una deuda a la lista para saldar
+  public agregarConsumo(deuda, $event) {
+    console.log($event.checked);
+    deuda.bandera=$event.checked;
+    this.consumoASaldar.push(deuda);
+    console.log(this.consumoASaldar);
+  }
+  // elimina una deuda seleccionada de la lista
+  public eliminarConsumo(indice) {
+    this.consumoASaldar.splice(indice, 1); 
+    console.log(this.consumoASaldar);
+  }
+  //declaramos los metodos para utilizar el Modal para detalles de la Deuda del Socio (Primer pestaña)
+  public detalleDeudaSocio(deuda, saldar): void {
+    const dialogRef = this.dialog.open(DetalleModal, {
+      width: '750px',
+      data: {Pagos: deuda, saldar: saldar},
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+  
+  //Muestra en la pestania buscar el elemento seleccionado de listar
+  public activarConsultarDeudor(deudor) {
+    this.seleccionarPestania(1, "Consultar");
+    this.autocompletado.setValue(deudor);
+    this.cambioAutocompletado();
+    console.log(deudor);
   }
 }
 
@@ -214,16 +219,44 @@ public accion(indice) {
   templateUrl: 'detalle-modal.html',
 })
 export class DetalleModal{
-  constructor(public dialogRef: MatDialogRef<DetalleModal>, private socio: Socio, public dialog: MatDialog,  private socioService: SocioService, private consumoServicio: ConsumoService,) {}
-
+  //Define la lista completa de pagos
+  public pagosConsumoSocio :FormArray ;
+  //Define si permite la opcion Saldar
+  public mostrarSaldar:boolean;
+  //Define la lista para deudas añadidas para SALDAR
+  public pagosASaldar:Array<any> = [];
+  constructor(public dialogRef: MatDialogRef<DetalleModal>, @Inject(MAT_DIALOG_DATA) public data) {}
+  
    ngOnInit() {
-   //inicializa el formulario para agregar un autorizado y sus elementos
+     this.pagosConsumoSocio=this.data.Pagos.pagos;
+     this.mostrarSaldar=this.data.saldar;
+     console.log(this.mostrarSaldar);
    }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-
   
+  //Determina que accion realizar con el Pago (segun si es checkeado)
+  public accionPago(pago, $event, indice){
+    if($event.checked==true){
+      this.agregarPago(pago, $event);
+    }else{
+      this.eliminarPago(indice);
+    }
+  }
+  // añade un pago a la lista para saldar
+  public agregarPago(pago, $event) {
+    console.log($event);
+    var bandera= $event.checked;
+    pago.bandera=bandera; //añade un nuevo campo "bandera" para saber si fue checkeado
+    this.pagosASaldar.push(pago); //Luego lo agrega a la lista de pagos a Saldar
+    console.log(this.pagosASaldar);
+  }
+  // elimina un pago seleccionado de la lista
+  public eliminarPago(indice) {
+    this.pagosASaldar.splice(indice, 1); 
+    console.log(this.pagosASaldar);
+  }
 }
 
